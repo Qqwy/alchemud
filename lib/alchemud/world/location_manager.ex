@@ -40,12 +40,12 @@ defmodule Alchemud.World.LocationManager do
     [
       %{location_module: Alchemud.World.Location.Forest, name: "foo", uuid: "jkl", description: "foobar", ways: [
         %{entrance_uuid: "lkj", name: "south"}
-        ]
+        ], exits: []
       },
       %{location_module: Alchemud.World.Location.Forest, name: "bar", uuid: "lkj", description: "barfoo", ways: [
         %{entrance_uuid: "jkl", name: "north"},
         %{entrance_uuid: "jkl", name: "south"}
-        ]
+        ], exits: []
       }
     ]
   end

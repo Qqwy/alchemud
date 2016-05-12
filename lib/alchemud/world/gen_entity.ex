@@ -8,8 +8,10 @@ defmodule Alchemud.World.GenEntity do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
 
     initial_state(initial_state)
-
   end
+
+  defcall get, state: state, do: reply(state) 
+
 
   defhandleinfo :tick, state: state = %{entity_module: entity_module} do
     IO.puts "tick called!"

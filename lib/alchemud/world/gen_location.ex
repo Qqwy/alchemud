@@ -17,17 +17,21 @@ defmodule Alchemud.World.GenLocation do
     initial_state(initial_state)
   end
 
+  defcall get, state: state, do: reply(state) 
+
   defhandleinfo :tick, state: state = %{location_module: location_module} do
     new_state = location_module.handle_tick(state)
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
     new_state(new_state)
   end
 
-  defcall add_exit(pid, state) do
+  defcast add_exit(pid, way = %Way{name: exit_name}), state: state = %{ways: ways, exits: exits} do
     IO.puts "Adding exit:"
     IO.inspect pid
+    IO.inspect way
     IO.inspect state
     Process.monitor(pid)
+    new_state(%{state | exits: [way | exits]})
   end
 
   def add_incoming_ways(state = %{ways: ways, uuid: uuid}) do
