@@ -6,6 +6,7 @@ defmodule Alchemud.World.LocationManager do
     - restarting of crashed locations.
 
   """
+  alias Alchemud.World.Location
 
   def start_location(initial_state) do
     Alchemud.World.GenLocation.start(initial_state)
@@ -38,11 +39,11 @@ defmodule Alchemud.World.LocationManager do
   """
   defp load_from_persistent_storage do
     [
-      %{location_module: Alchemud.World.Location.Forest, name: "foo", uuid: "jkl", description: "foobar", ways: [
+      %Location{module: Alchemud.World.Location.Forest, name: "foo", uuid: "jkl", description: "foobar", ways: [
         %{entrance_uuid: "lkj", name: "south"}
         ], exits: []
       },
-      %{location_module: Alchemud.World.Location.Forest, name: "bar", uuid: "lkj", description: "barfoo", ways: [
+      %Location{module: Alchemud.World.Location.Forest, name: "bar", uuid: "lkj", description: "barfoo", ways: [
         %{entrance_uuid: "jkl", name: "north"},
         %{entrance_uuid: "jkl", name: "south"}
         #,%{entrance_uuid: "unexistent", name: "unexistent"}

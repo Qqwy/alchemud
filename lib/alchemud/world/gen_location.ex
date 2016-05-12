@@ -8,9 +8,10 @@ defmodule Alchemud.World.GenLocation do
   use ExActor.GenServer
 
   alias Alchemud.World.Way
+  alias Alchemud.World.Location
 
 
-  defstart start(initial_state = %{location_module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:location, uuid}}] do
+  defstart start(initial_state = %Location{module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:location, uuid}}] do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
 
     add_incoming_ways(initial_state)
@@ -18,9 +19,9 @@ defmodule Alchemud.World.GenLocation do
   end
 
   defcall get, state: state, do: reply(state) 
-  defcall exits, state: %{exits: exits}, do: reply(exits) 
+  defcall exits, state: %Location{exits: exits}, do: reply(exits) 
 
-  defhandleinfo :tick, state: state = %{location_module: location_module} do
+  defhandleinfo :tick, state: state = %Location{module: location_module} do
     new_state = location_module.handle_tick(state)
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
     new_state(new_state)
@@ -30,7 +31,7 @@ defmodule Alchemud.World.GenLocation do
   defhandleinfo _, do: noreply
 
 
-  defcast add_exit(pid, way = %Way{name: exit_name}), state: state = %{ways: ways, exits: exits} do
+  defcast add_exit(pid, way = %Way{name: exit_name}), state: state = %Location{ways: ways, exits: exits} do
     IO.puts "Adding exit:"
     IO.inspect pid
     IO.inspect way
@@ -39,7 +40,7 @@ defmodule Alchemud.World.GenLocation do
     new_state(%{state | exits: [way | exits]})
   end
 
-  def add_incoming_ways(state = %{ways: ways, uuid: uuid}) do
+  def add_incoming_ways(state = %Location{ways: ways, uuid: uuid}) do
     IO.puts "Adding incoming ways"
     IO.inspect ways
     for %{entrance_uuid: entrance_uuid, name: name} <- ways do
