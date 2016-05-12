@@ -11,8 +11,7 @@ defmodule Alchemud.World.GenWay do
   end
 
   defcall get, state: state, do: reply(state) 
-
-
+  defcall get_exit, state: state = %Way{exit: exit_location} , do: reply(exit_location) 
 
   # TODO: Add logic to re-call ping_entrance once entrance location is down (Monitor it!).
   defhandleinfo :ping_entrance, state: state = %Way{} do

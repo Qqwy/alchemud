@@ -30,7 +30,6 @@ defmodule Alchemud.World.GenLocation do
   # TODO: FIND OUT WHY CATCHALL is necessary here? Why do ways crash and notify the locations using :DOWN
   defhandleinfo _, do: noreply
 
-
   defcast add_exit(pid, way = %Way{name: exit_name}), state: state = %Location{ways: ways, exits: exits} do
     IO.puts "Adding exit:"
     IO.inspect pid
