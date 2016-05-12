@@ -8,7 +8,7 @@ defmodule Alchemud.World.LocationManager do
   """
 
   def start_location(initial_state) do
-    Alchemud.World.GenLocation.start_link(initial_state)
+    Alchemud.World.GenLocation.start(initial_state)
   end
 
   def start do
@@ -45,6 +45,7 @@ defmodule Alchemud.World.LocationManager do
       %{location_module: Alchemud.World.Location.Forest, name: "bar", uuid: "lkj", description: "barfoo", ways: [
         %{entrance_uuid: "jkl", name: "north"},
         %{entrance_uuid: "jkl", name: "south"}
+        #,%{entrance_uuid: "unexistent", name: "unexistent"}
         ], exits: []
       }
     ]

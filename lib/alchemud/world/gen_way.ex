@@ -16,6 +16,7 @@ defmodule Alchemud.World.GenWay do
 
   # TODO: Add logic to re-call ping_entrance once entrance location is down (Monitor it!).
   defhandleinfo :ping_entrance, state: state = %Way{} do
+    IO.inspect "[#{inspect self}] Pinging entrance..."
     entrance_pid = entrance_pid(state)
     case entrance_pid do
       nil -> Process.send_after(self, :ping_entrance, @exit_check_interval)
@@ -26,8 +27,10 @@ defmodule Alchemud.World.GenWay do
   end
 
   # TODO: make pattern-match only for the monitored entrance process.
-  defhandleinfo {:DOWN, ref, :process, _pid, _reason}, do: send(self, :ping_entrance)
-
+  defhandleinfo {:DOWN, ref, :process, _pid, _reason} do
+    Process.send_after(self, :ping_entrance, @exit_check_interval)
+    noreply
+  end
 
 
   defp add_as_exit_to_entrance_location(entrance_pid, state = %Way{}) when is_pid(entrance_pid) do
@@ -35,7 +38,9 @@ defmodule Alchemud.World.GenWay do
     Alchemud.World.GenLocation.add_exit(entrance_pid, self, state)
   end
 
-  defp entrance_pid(state = %Way{entrance: entrance_uuid}), do: Alchemud.World.LocationManager.whereis_location(entrance_uuid)
-
+  defp entrance_pid(state = %Way{entrance: entrance_uuid}) do
+    IO.inspect "entrance: #{inspect entrance_uuid}"
+    Alchemud.World.LocationManager.whereis_location(entrance_uuid)
+  end
 
 end
