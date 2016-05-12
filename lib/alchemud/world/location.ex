@@ -8,4 +8,6 @@ defmodule Alchemud.World.Location do
   @type location_state_map :: %{location_module: atom}
 
   @callback handle_tick(location_state_map) :: location_state_map
+
+  defstruct module: nil, uuid: nil, description: "", name: "", ways: [], exits: []
 end

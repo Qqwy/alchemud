@@ -29,7 +29,7 @@ defmodule Alchemud.World.EntityManager do
   @doc """
   STUB
   """
-  defp load_from_persistent_storage do
+  def load_from_persistent_storage do
     [
       %{entity_module: Alchemud.World.Entity.Bird, name: "foo", uuid: "asdf"},
       %{entity_module: Alchemud.World.Entity.Bird, name: "bar", uuid: "fdsa"}

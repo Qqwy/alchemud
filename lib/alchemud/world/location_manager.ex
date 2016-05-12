@@ -25,13 +25,28 @@ defmodule Alchemud.World.LocationManager do
     end
   end
 
+  def whereis_way(entrance_location, exit_location, name) do
+    maybe_pid = :global.whereis_name {:way, {entrance_location, exit_location, name}}
+    case maybe_pid do
+      :undefined  -> nil
+      _           -> maybe_pid
+    end
+  end
+
   @doc """
   STUB
   """
   defp load_from_persistent_storage do
     [
-      %{location_module: Alchemud.World.Location.Forest, name: "foo", uuid: "jkl", description: "foobar"},
-      %{location_module: Alchemud.World.Location.Forest, name: "bar", uuid: "lkj", description: "barfoo"}
+      %{location_module: Alchemud.World.Location.Forest, name: "foo", uuid: "jkl", description: "foobar", ways: [
+        %{entrance_uuid: "lkj", name: "south"}
+        ]
+      },
+      %{location_module: Alchemud.World.Location.Forest, name: "bar", uuid: "lkj", description: "barfoo", ways: [
+        %{entrance_uuid: "jkl", name: "north"},
+        %{entrance_uuid: "jkl", name: "south"}
+        ]
+      }
     ]
   end
 end
