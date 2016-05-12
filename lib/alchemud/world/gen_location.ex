@@ -7,11 +7,9 @@ defmodule Alchemud.World.GenLocation do
 
   use ExActor.GenServer
 
-  defstart start_link(location_module, description \\ "") do
+  defstart start_link(initial_state = %{location_module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:location, uuid}}] do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
-
-    initial_state(%{location_module: location_module, description: description})
-
+    initial_state(initial_state)
   end
 
   defhandleinfo :tick, state: state = %{location_module: location_module} do

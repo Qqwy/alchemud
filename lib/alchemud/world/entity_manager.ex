@@ -19,7 +19,11 @@ defmodule Alchemud.World.EntityManager do
   end
 
   def whereis_entity(uuid) do
-    :global.whereis_name {:entity, uuid}
+    maybe_pid = :global.whereis_name {:entity, uuid}
+    case maybe_pid do
+      :undefined  -> nil
+      _           -> maybe_pid
+    end
   end
 
   @doc """
