@@ -4,6 +4,7 @@ defmodule Alchemud.Commands do
   """
 
   alias Alchemud.Commands.{Universal, World}
+  alias Alchemud.Connections.Connection
 
   @do_not_understand_messages [
     "Can you restate that?",
@@ -32,16 +33,16 @@ defmodule Alchemud.Commands do
     |> String.strip
   end
 
-  def consume_command(player, command) do
+  def consume_command(connection, command) do
     command = prettify_command(command)
-    Universal.maybe_consume_command(player, command)
-    || World.maybe_consume_command(player, command)
-    || print_do_not_understand_message(player, command)
+    Universal.maybe_consume_command(connection, command)
+    || World.maybe_consume_command(connection, command)
+    || print_do_not_understand_message(connection, command)
   end
 
-  def print_do_not_understand_message(player, _command) do
+  def print_do_not_understand_message(connection, _command) do
     message = @do_not_understand_messages |> Enum.random
-    Alchemud.Connections.Telnet.Handler.send_message(player, message)
+    Connection.send_message(connection, message)
     true
   end
 end

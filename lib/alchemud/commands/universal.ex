@@ -6,7 +6,7 @@ defmodule Alchemud.Commands.Universal do
   """
 
   def maybe_consume_command(player, "hello") do
-    Alchemud.Connections.Telnet.Handler.send_message(player, "Hello to you too!")
+    Alchemud.Connections.Connection.send_message(player, "Hello to you too!")
     true
   end
 
