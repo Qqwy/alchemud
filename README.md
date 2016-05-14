@@ -1,20 +1,22 @@
 # Alchemud
 
-**TODO: Add description**
+This is a very early attempt to create a Multi-User-Dungeon using the programming language Elixir.
 
-## Installation
+Some inspiration is taken from the never-finished [Erlmud by zxq9](http://zxq9.com/erlmud/html/).
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
 
-  1. Add alchemud to your list of dependencies in `mix.exs`:
+Roadmap:
 
-        def deps do
-          [{:alchemud, "~> 0.0.1"}]
-        end
+2016-05-14
 
-  2. Ensure alchemud is started before your application:
+- Telnet-listener using Ranch.
+- adding Entities to locations.
+- re-connecting locations+ways whenever locations go down and come back up.
+- Connecting locations through ways
+- Loading locations from persistence
+- Location manager
 
-        def application do
-          [applications: [:alchemud]]
-        end
 
+2016-05-11
+
+- Barebones start
