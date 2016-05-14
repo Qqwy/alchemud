@@ -1,10 +1,9 @@
-defmodule Alchemud.RootSupervisor do
+defmodule Alchemud.World.Supervisor do
   @moduledoc """
-  Supervises all parts:
-
-    - World
-    - EntityManager
-    - ConnectionManager
+  Supervises:
+  - global World processes
+  - LocationSupervisor
+  - ???
   """
   use Supervisor
 
@@ -13,7 +12,9 @@ defmodule Alchemud.RootSupervisor do
   end
 
   def init(:ok) do
-    children = []
+    children = [
+      supervisor(Alchemud.World.LocationSupervisor,[])
+    ]
     supervise(children, strategy: :one_for_one)
   end
 end

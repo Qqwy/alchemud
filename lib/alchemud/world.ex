@@ -24,7 +24,7 @@ defmodule Alchemud.World do
   @doc """
   SHOULD BE USED FOR DEBUGGING PURPOSES ONLY!
   """
-  def debug_get(uuid) do
+  def dg(uuid) do
     loc = LocationManager.whereis_location(uuid)
     if loc do
       loc |> Alchemud.World.GenLocation.get

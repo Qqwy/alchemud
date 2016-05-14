@@ -10,7 +10,7 @@ defmodule Alchemud.World.GenLocation do
   alias Alchemud.World.{Location, Way, Entity}
 
 
-  defstart start(initial_state = %Location{module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:location, uuid}}] do
+  defstart start_link(initial_state = %Location{module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:location, uuid}}] do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
 
     add_incoming_ways(initial_state)
