@@ -41,5 +41,4 @@ defmodule Alchemud.World.GenWay do
     IO.inspect "entrance: #{inspect entrance_uuid}"
     Alchemud.World.LocationManager.whereis_location(entrance_uuid)
   end
-
 end

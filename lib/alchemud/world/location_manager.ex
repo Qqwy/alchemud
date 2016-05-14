@@ -8,8 +8,8 @@ defmodule Alchemud.World.LocationManager do
   """
   alias Alchemud.World.Location
 
-  def start_location(initial_state) do
-    Alchemud.World.GenLocation.start(initial_state)
+  def start_location(initial_state = %Location.State{module: module}) do
+    module.start(initial_state)
   end
 
   def start do
@@ -39,11 +39,11 @@ defmodule Alchemud.World.LocationManager do
   """
   defp load_from_persistent_storage do
     [
-      %Location{module: Alchemud.World.Location.Forest, name: "foo", uuid: "jkl", description: "foobar", ways: [
+      %Location.State{module: Alchemud.World.Location.Forest, name: "foo", uuid: "jkl", description: "foobar", ways: [
         %{entrance_uuid: "lkj", name: "south"}
         ], exits: []
       },
-      %Location{module: Alchemud.World.Location.Forest, name: "bar", uuid: "lkj", description: "barfoo", ways: [
+      %Location.State{module: Alchemud.World.Location.Forest, name: "bar", uuid: "lkj", description: "barfoo", ways: [
         %{entrance_uuid: "jkl", name: "north"},
         %{entrance_uuid: "jkl", name: "south"}
         #,%{entrance_uuid: "unexistent", name: "unexistent"}
