@@ -14,8 +14,13 @@ defmodule Alchemud.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger],
-     mod: {Alchemud, []}]
+    [
+      applications: [
+        :logger, 
+        :ranch
+      ],
+      mod: {Alchemud, []}
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -29,7 +34,8 @@ defmodule Alchemud.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:exactor, "~> 2.2.0", warn_missing: false}
+      {:exactor, "~> 2.2.0", warn_missing: false},
+      {:ranch, "~> 1.1"}
     ]
   end
 end
