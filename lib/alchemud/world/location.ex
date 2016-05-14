@@ -13,3 +13,4 @@ defmodule Alchemud.World.Location do
 
   def transient_fields, do: [:exits, :contents, :pid]
 end
+ 
