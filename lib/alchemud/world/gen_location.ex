@@ -10,11 +10,11 @@ defmodule Alchemud.World.GenLocation do
   alias Alchemud.World.{Location, Way, Entity}
 
 
-  defstart start_link(initial_state = %Location{module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:location, uuid}}] do
+  defstart start_link(state = %Location{module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:location, uuid}}] do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
 
-    add_incoming_ways(initial_state)
-    initial_state(initial_state)
+    add_incoming_ways(state)
+    initial_state(state)
   end
 
   defcall get, state: state, do: reply(state) 
@@ -24,7 +24,7 @@ defmodule Alchemud.World.GenLocation do
   """ 
   defcall exits, state: %Location{exits: exits}, do: reply(exits) 
 
-
+ 
   @doc """
   Adds a Way to the list of tis Location's exits.
   TODO: Find out if storing Way's PID is better than storing its UUID.
