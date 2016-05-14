@@ -9,5 +9,7 @@ defmodule Alchemud.World.Location do
 
   @callback handle_tick(location_state_map) :: location_state_map
 
-  defstruct module: nil, uuid: nil, description: "", name: "", ways: [], exits: []
+  defstruct module: nil, uuid: nil, description: "", name: "", ways: [], exits: [], contents: [], pid: nil
+
+  def transient_fields, do: [:exits, :contents, :pid]
 end

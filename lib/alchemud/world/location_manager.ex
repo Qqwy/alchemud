@@ -39,13 +39,13 @@ defmodule Alchemud.World.LocationManager do
   """
   defp load_from_persistent_storage do
     [
-      %Location{module: Alchemud.World.Location.Forest, name: "foo", uuid: "jkl", description: "foobar", ways: [
-        %{entrance_uuid: "lkj", name: "south"}
+      %Location{module: Alchemud.World.Location.Forest, name: "foo", uuid: "forest1", description: "foobar", ways: [
+        %{entrance_uuid: "forest2", name: "south"}
         ], exits: []
       },
-      %Location{module: Alchemud.World.Location.Forest, name: "bar", uuid: "lkj", description: "barfoo", ways: [
-        %{entrance_uuid: "jkl", name: "north"},
-        %{entrance_uuid: "jkl", name: "south"}
+      %Location{module: Alchemud.World.Location.Forest, name: "bar", uuid: "forest2", description: "barfoo", ways: [
+        %{entrance_uuid: "forest1", name: "north"},
+        %{entrance_uuid: "forest1", name: "south"}
         #,%{entrance_uuid: "unexistent", name: "unexistent"}
         ], exits: []
       }

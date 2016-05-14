@@ -6,9 +6,10 @@ defmodule Alchemud.World.EntityManager do
 
 
   """
+  alias Alchemud.World.Entity
 
   def start_entity(initial_state) do
-    Alchemud.World.GenEntity.start_link(initial_state)
+    Alchemud.World.GenEntity.start(initial_state)
   end
 
 
@@ -31,8 +32,9 @@ defmodule Alchemud.World.EntityManager do
   """
   def load_from_persistent_storage do
     [
-      %{entity_module: Alchemud.World.Entity.Bird, name: "foo", uuid: "asdf"},
-      %{entity_module: Alchemud.World.Entity.Bird, name: "bar", uuid: "fdsa"}
+      %Entity{module: Alchemud.World.Entity.Bird, name: "red bird",  uuid: "e1", container_uuid: "forest1"},
+      %Entity{module: Alchemud.World.Entity.Bird, name: "grey bird", uuid: "e2", container_uuid: "forest1"},
+      %Entity{module: Alchemud.World.Entity.Bird, name: "pink bird", uuid: "e3", container_uuid: "forest2"}
     ]
   end
 end

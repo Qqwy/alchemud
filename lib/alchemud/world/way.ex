@@ -5,5 +5,5 @@ defmodule Alchemud.World.Way do
   (and is deregistered when the way is exited.)
   """
 
-  defstruct entrance: nil, exit: nil, name: nil
+  defstruct entrance: nil, exit: nil, name: nil, pid: nil
 end
