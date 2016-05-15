@@ -34,7 +34,7 @@ defmodule Alchemud.Connections.Connection do
 
   """
 
-  @console_start "~> "
+  @prompt IO.ANSI.format([:green, :bright, "~> ", :normal])
 
   @doc """
   Called by a connection handler when a new connection has been established.
@@ -43,7 +43,7 @@ defmodule Alchemud.Connections.Connection do
   """
   def new_connection(connection) do
     send_welcome_message(connection)
-    send_console_start(connection)
+    send_prompt(connection)
   end
 
   @doc """
@@ -54,7 +54,7 @@ defmodule Alchemud.Connections.Connection do
   """
   def input_received(connection, input) do
     Alchemud.Commands.consume_command(connection, input)
-    send_console_start(connection)
+    send_prompt(connection)
   end
 
   @doc """
@@ -88,8 +88,8 @@ defmodule Alchemud.Connections.Connection do
     send_message(connection, @welcome_message)
   end
 
-  defp send_console_start(connection) do
-    send_message(connection, @console_start, newline: false)
+  defp send_prompt(connection) do
+    send_message(connection, @prompt, newline: false)
   end
 
 

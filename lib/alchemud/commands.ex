@@ -3,7 +3,7 @@ defmodule Alchemud.Commands do
   Handles command parsing (binary strings that players send to influence the world)
   """
 
-  alias Alchemud.Commands.{Universal, World}
+  alias Alchemud.Commands.{Service, Universal, World}
   alias Alchemud.Connections.Connection
 
   @do_not_understand_messages [
@@ -35,7 +35,8 @@ defmodule Alchemud.Commands do
 
   def consume_command(connection, command) do
     command = prettify_command(command)
-    Universal.maybe_consume_command(connection, command)
+    Service.maybe_consume_command(connection, command)
+    || Universal.maybe_consume_command(connection, command)
     || World.maybe_consume_command(connection, command)
     || print_do_not_understand_message(connection, command)
   end

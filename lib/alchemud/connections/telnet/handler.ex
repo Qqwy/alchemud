@@ -26,9 +26,9 @@ defmodule Alchemud.Connections.Telnet.Handler do
 
   def loop(connection = %Connection.Telnet{socket: socket, transport: transport}) do
     case transport.recv(socket, 0, @tcp_timeout) do
-      {:ok, msg} when msg in ["exit\r\n", "quit\r\n"]
-        -> 
-        __MODULE__.close(connection)
+      {:ok, <<255, _rest ::binary>>} -> 
+        IO.puts "Rejecting Telnet Negotiation options."
+        __MODULE__.loop(connection)
       {:ok, data} ->
         IO.puts "Received data from telnet: #{inspect data}"
         Connection.input_received(connection, data)

@@ -29,13 +29,14 @@ defmodule Alchemud.World.GenLocation do
   Adds a Way to the list of tis Location's exits.
   TODO: Find out if storing Way's PID is better than storing its UUID.
   """
-  defcast add_exit(way_pid, way = %Way{name: exit_name}), state: state = %Location{ways: ways, exits: exits} do
+  defcall add_exit(way_pid, way = %Way{name: exit_name}), state: state = %Location{ways: ways, exits: exits} do
     IO.puts "Adding exit:"
-    IO.inspect way_pid
-    IO.inspect way
-    IO.inspect state
+    Apex.ap way_pid
+    Apex.ap way
+    Apex.ap state
     Process.monitor(way_pid)
-    new_state(%Location{state | exits: [%Way{way | pid: way_pid} | exits]})
+    new_state = %Location{state | exits: [%Way{way | pid: way_pid} | exits]}
+    set_and_reply(new_state, :ok)
   end
 
   @doc """
@@ -45,12 +46,12 @@ defmodule Alchemud.World.GenLocation do
   """
   defcall add_entity(entity_pid, entity = %Entity{}), state: state = %Location{contents: contents} do
     IO.puts "Adding entity:"
-    IO.inspect entity_pid
-    IO.inspect entity
-    IO.inspect state
+    Apex.ap entity_pid
+    Apex.ap entity
     Process.monitor(entity_pid)
-    new_state(%Location{state | contents: [%Entity{entity | pid: entity_pid} | contents]})
-    reply(:ok)
+    new_state = %Location{state | contents: [%Entity{entity | pid: entity_pid} | contents]}
+    Apex.ap new_state
+    set_and_reply(new_state, :ok)
   end
 
   @doc """
@@ -68,7 +69,7 @@ defmodule Alchemud.World.GenLocation do
   """
   defhandleinfo {:DOWN, ref, :process, pid, reason}, state: state = %Location{exits: exits, contents: contents} do
     IO.inspect "[#{inspect self}]:DOWN message received:"
-    IO.inspect [ref, pid, reason]
+    Apex.ap [ref, pid, reason]
 
     # Filter exits
     exits = Enum.reject(exits, fn %Way{pid: way_pid} -> pid == way_pid end)
@@ -83,7 +84,7 @@ defmodule Alchemud.World.GenLocation do
 
   defp add_incoming_ways(state = %Location{ways: ways, uuid: uuid}) do
     IO.puts "Adding incoming ways"
-    IO.inspect ways
+    Apex.ap ways
     for %{entrance_uuid: entrance_uuid, name: name} <- ways do
       Alchemud.World.GenWay.start_link(%Way{entrance: entrance_uuid, exit: uuid, name: name })
     end

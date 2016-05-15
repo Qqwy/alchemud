@@ -1,5 +1,5 @@
 defmodule Alchemud.Commands.Universal do
-  @vehaviour Alchemud.Commands.Behaviour
+  @behaviour Alchemud.Commands.Behaviour
   @moduledoc """
   Commands that can be done from everywhere.
   Things like changing the options, consulting 'help', or participating in the global chat.
