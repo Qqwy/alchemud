@@ -2,6 +2,8 @@ defmodule Alchemud.Connections.Connection do
   alias Alchemud.Connections.ConnectionProtocol 
   alias Alchemud.Players.Player
 
+  use ExActor.GenServer
+
 
   @welcome_message """
 
@@ -35,6 +37,12 @@ defmodule Alchemud.Connections.Connection do
 
   """
 
+  defmodule State do
+    defstruct gatekeeper: nil, player: nil, connection_handler: nil 
+  end
+  alias Alchemud.Connections.Connection.State as Connection.State
+  alias Alchemud.Connections.Gatekeeper
+
   @prompt IO.ANSI.format([:green, :bright, "~> ", :normal])
 
   @doc """
@@ -42,13 +50,49 @@ defmodule Alchemud.Connections.Connection do
 
   prints the welcome screen.
   """
-  def new_connection(connection) do
+  # def new_connection(connection) do
+  #   connection
+  #   |> send_welcome_message
+  #   |> IO.inspect
+  #   |> ConnectionProtocol.register_player(%Player{})
+  #   |> send_prompt
+  # end
+
+  @doc """
+  To be called from a Connection Handler process.
+  """
+  defstart start_link(connection_handler) do
+    init_state = %Connection.State{connection_handler: connection_handler, gatekeeper: Gatekeeper.new}
+
     connection
     |> send_welcome_message
     |> IO.inspect
-    |> ConnectionProtocol.register_player(%Player{})
     |> send_prompt
+    # TODO: Gatekeeper
+    initial_state(init_state)
   end
+
+  # We have a connected player
+  defcast input_received(connection_handler, input), state: %Connection.State{connection_handler: connection_handler, player: player = %Player{}} do
+    input = prettify_input(input)
+    # TODO: Move commands into Player
+    Alchemud.Commands.consume_command(connection, input)
+    send_prompt(connection_handler)
+  end
+
+  # We are still authenticating. Gatekeeper handles control flow here.
+  defcast input_received(connection_handler, input), state: state = %Connection.State{connection_handler: connection_handler, gatekeeper: gatekeeper} do
+    input = prettify_input(input)
+    case Gatekeeper.auth(gatekeeper, input) do
+      {player = %Player{}, gatekeeper = %Gatekeeper{}} -> # Logged in
+        send_prompt(connection_handler)
+        new_state(%Connection.State{state | gatekeeper: gatekeeper, player: player})
+      gatekeeper = %Gatekeeper{} -> # Still in gatekeeperland
+        new_state(%Connection.State{state | gatekeeper: gatekeeper})
+    end
+  end
+
+
 
   @doc """
   Called by a connection handler when incoming data is received.
@@ -56,15 +100,15 @@ defmodule Alchemud.Connections.Connection do
   `connection` ought to be a struct that implements the ConnectionProtocol.
   `input` ought to be a binary string.
   """
-  def input_received(connection, input) do
-    input = prettify_input(input)
-    # TODO: Restructure
-    player_pid = ConnectionProtocol.extract_player_pid(connection)
-    Alchemud.Players.GenPlayer.message(player_pid, connection, input)
-    #Alchemud.Commands.consume_command(connection, input)
-    send_prompt(connection)
-    connection
-  end
+  # def input_received(connection, input) do
+  #   input = prettify_input(input)
+  #   # TODO: Restructure
+  #   player_pid = ConnectionProtocol.extract_player_pid(connection)
+  #   Alchemud.Players.GenPlayer.message(player_pid, connection, input)
+  #   #Alchemud.Commands.consume_command(connection, input)
+  #   send_prompt(connection)
+  #   connection
+  # end
 
 
   @doc """
