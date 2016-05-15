@@ -4,55 +4,54 @@
     and also handles player registration.
     """
     alias Alchemud.Players.Player
+    alias Alchemud.Connections.Connection
 
     use Fsm, initial_state: :idle, initial_data: %Player{}
     defstate idle do
-      defevent auth(name) do
+      defevent auth(connection, name) do
         existing_player = find_player_by_name(name)
         if existing_player do
+          Connection.send_message connection, "#{name}, eh? Please enter your password:"
           next_state(:login_password, existing_player)
         else
+          Connection.send_message connection, "Welcome, new adventurer! Please enter a password so I will remember you in the future:"
           next_state(:register_password)
         end
       end
     end
 
     defstate login_password do
-      defevent message(password), data: %Player{password: password} do
-        IO.puts "Password is right! Welcome!"
+      defevent auth(connection, password), data: %Player{password: password} do
+        Connection.send_message connection, "Password is right! Welcome!"
         next_state(:signed_in)
       end
 
-      defevent message(password), data: %Player{password: _actual_password} do
-        IO.puts "Password is wrong!"
+      defevent auth(connection, password), data: %Player{password: _actual_password} do
+        Connection.send_message connection, "Ouch! That password is wrong! What was your name again?"
         next_state(:idle)
       end
     end
 
     defstate register_password do
-      defevent message(password) do
-        IO.puts "Ok!"
+      defevent auth(connection, password) do
+        Connection.send_message connection, "Ok! So I absolutely will not forget, can you confirm the password please:"
         next_state(:register_password_confirm)
       end
     end
 
     defstate register_password_confirm do
-      defevent message(password_confirm), data: %Player{password: password} do
-        IO.puts "WIP"
+      defevent auth(connection, password_confirm), data: %Player{password: password} do
         if password == password_confirm do
-          IO.puts "You are now signed up! Welcome!"
+          Connection.send_message connection, "You are now signed up! Welcome!"
           next_state(:signed_in)
         else
-          IO.puts "Passwords do not match. Please try again."
+          Connection.send_message connection, "Heh, those passwords do not match. Please try again:\r\n\r\nPlease enter a password so I will remember you in the future:"
           next_state(:register_password)
         end
       end
     end
 
     defstate signed_in do
-      defevent message(message) do
-        # Pass on to Commands.
-      end
     end
 
 
