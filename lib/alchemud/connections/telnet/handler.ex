@@ -30,9 +30,8 @@ defmodule Alchemud.Connections.Telnet.Handler do
         __MODULE__.loop(connection)
       {:ok, data} ->
         IO.puts "Received data from telnet: #{inspect data}"
-        connection
-        |> Connection.input_received(connection_pid, data)
-        |> __MODULE__.loop
+        Connection.input_received(connection_pid, connection, data)
+        __MODULE__.loop(connection)
         #formatted_data = IO.ANSI.format(["The ", :bright, "data", :normal, " is: ", :green, :bright, inspect(data)])
         #send_message(connection, formatted_data)
 
@@ -40,7 +39,7 @@ defmodule Alchemud.Connections.Telnet.Handler do
 
         #send_console_start(connection)
       _ ->
-        Connection.send_message(connection, "\r\n\r\nFor safekeeping, the connection will now be closed.")
+        #Connection.send_message(connection, "\r\n\r\nFor safekeeping, the connection will now be closed.")
         __MODULE__.close(connection)
     end
   end

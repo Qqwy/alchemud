@@ -37,10 +37,10 @@ defmodule Alchemud.Connections.Connection do
 
   """
 
-  defmodule State do
+  defmodule ConnectionState do
     defstruct gatekeeper: nil, player: nil, connection_handler: nil 
   end
-  alias Alchemud.Connections.Connection.State, as: ConnectionState
+  alias Alchemud.Connections.Connection.ConnectionState
   alias Alchemud.Connections.Gatekeeper
 
   @prompt IO.ANSI.format([:green, :bright, "~> ", :normal])
@@ -62,14 +62,13 @@ defmodule Alchemud.Connections.Connection do
   To be called from a Connection Handler process.
   """
   defstart start_link(connection_handler) do
-    init_state = %ConnectionState{connection_handler: connection_handler, gatekeeper: Gatekeeper.new}
+    state = %ConnectionState{connection_handler: connection_handler, gatekeeper: Gatekeeper.new}
 
-    connection_handler
-    |> send_welcome_message
-    |> IO.inspect
-    |> send_prompt
+    send_welcome_message(state)
+    IO.inspect(state)
+    send_prompt(state)
     # TODO: Gatekeeper
-    initial_state(init_state)
+    initial_state(state)
   end
 
   # We have a connected player
@@ -78,21 +77,28 @@ defmodule Alchemud.Connections.Connection do
     # TODO: Move commands into Player
     Alchemud.Commands.consume_command(connection_handler, input)
     send_prompt(connection_handler)
+    noreply
   end
 
   # We are still authenticating. Gatekeeper handles control flow here.
-  defcast input_received(connection_handler, input), state: state = %ConnectionState{connection_handler: connection_handler, gatekeeper: gatekeeper} do
+  defcast input_received(connection_handler, input), state: state = %ConnectionState{gatekeeper: gatekeeper} do
     input = prettify_input(input)
     case Gatekeeper.auth(gatekeeper, input) do
       {player = %Player{}, gatekeeper = %Gatekeeper{}} -> # Logged in
-        send_prompt(connection_handler)
+        send_prompt(state)
         new_state(%ConnectionState{state | gatekeeper: gatekeeper, player: player})
       gatekeeper = %Gatekeeper{} -> # Still in gatekeeperland
         new_state(%ConnectionState{state | gatekeeper: gatekeeper})
     end
   end
 
-
+  defcast input_received(connection_handler, input), state: state = %ConnectionState{gatekeeper: gatekeeper} do
+    IO.inspect connection_handler
+    IO.inspect input
+    IO.inspect state
+    IO.inspect gatekeeper
+    noreply
+  end
 
   @doc """
   Called by a connection handler when incoming data is received.
@@ -130,29 +136,28 @@ defmodule Alchemud.Connections.Connection do
 
   - **newline:** Boolean. if true, auto-appends `\r\n` at the end of the message. defaults to true.
   """
-  def send_message(connection, message, opts)
-  def send_message(connection, message, newline: false) do
-    ConnectionProtocol.send_message(connection, message)
-    connection
+  def send_message(connection_state, message, opts)
+  def send_message(connection_state = %ConnectionState{connection_handler: connection_handler}, message, newline: false) do
+    ConnectionProtocol.send_message(connection_handler, message)
   end
 
-  def send_message(connection, message) do
-    send_message(connection, [message, "\r\n"], newline: false)
+  def send_message(connection_state, message) do
+    send_message(connection_state, [message, "\r\n"], newline: false)
   end
 
   @doc """
   Closes the `connection`, prints good bye message.
   """
-  def close(connection) do
-    send_message(connection, "\r\nGood bye!\r\n")
-    ConnectionProtocol.close(connection)
+  def close(connection_state = %ConnectionState{connection_handler: connection_handler}) do
+    send_message(connection_state, "\r\nGood bye!\r\n")
+    ConnectionProtocol.close(connection_state)
   end
 
-  defp send_welcome_message(connection) do
-    send_message(connection, @welcome_message)
+  defp send_welcome_message(connection_state) do
+    send_message(connection_state, @welcome_message)
   end
 
-  defp send_prompt(connection) do
-    send_message(connection, @prompt, newline: false)
+  defp send_prompt(connection_state) do
+    send_message(connection_state, @prompt, newline: false)
   end
 end
