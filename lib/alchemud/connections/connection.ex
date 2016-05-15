@@ -40,7 +40,7 @@ defmodule Alchemud.Connections.Connection do
   defmodule State do
     defstruct gatekeeper: nil, player: nil, connection_handler: nil 
   end
-  alias Alchemud.Connections.Connection.State as Connection.State
+  alias Alchemud.Connections.Connection.State, as: ConnectionState
   alias Alchemud.Connections.Gatekeeper
 
   @prompt IO.ANSI.format([:green, :bright, "~> ", :normal])
@@ -62,9 +62,9 @@ defmodule Alchemud.Connections.Connection do
   To be called from a Connection Handler process.
   """
   defstart start_link(connection_handler) do
-    init_state = %Connection.State{connection_handler: connection_handler, gatekeeper: Gatekeeper.new}
+    init_state = %ConnectionState{connection_handler: connection_handler, gatekeeper: Gatekeeper.new}
 
-    connection
+    connection_handler
     |> send_welcome_message
     |> IO.inspect
     |> send_prompt
@@ -73,22 +73,22 @@ defmodule Alchemud.Connections.Connection do
   end
 
   # We have a connected player
-  defcast input_received(connection_handler, input), state: %Connection.State{connection_handler: connection_handler, player: player = %Player{}} do
+  defcast input_received(connection_handler, input), state: %ConnectionState{connection_handler: connection_handler, player: player = %Player{}} do
     input = prettify_input(input)
     # TODO: Move commands into Player
-    Alchemud.Commands.consume_command(connection, input)
+    Alchemud.Commands.consume_command(connection_handler, input)
     send_prompt(connection_handler)
   end
 
   # We are still authenticating. Gatekeeper handles control flow here.
-  defcast input_received(connection_handler, input), state: state = %Connection.State{connection_handler: connection_handler, gatekeeper: gatekeeper} do
+  defcast input_received(connection_handler, input), state: state = %ConnectionState{connection_handler: connection_handler, gatekeeper: gatekeeper} do
     input = prettify_input(input)
     case Gatekeeper.auth(gatekeeper, input) do
       {player = %Player{}, gatekeeper = %Gatekeeper{}} -> # Logged in
         send_prompt(connection_handler)
-        new_state(%Connection.State{state | gatekeeper: gatekeeper, player: player})
+        new_state(%ConnectionState{state | gatekeeper: gatekeeper, player: player})
       gatekeeper = %Gatekeeper{} -> # Still in gatekeeperland
-        new_state(%Connection.State{state | gatekeeper: gatekeeper})
+        new_state(%ConnectionState{state | gatekeeper: gatekeeper})
     end
   end
 

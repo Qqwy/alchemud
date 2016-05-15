@@ -19,11 +19,11 @@ defmodule Alchemud.Connections.Telnet.Handler do
     IO.puts "New telnet connection! [socket: #{inspect socket}]"
     
     connection
-    |> Connection.new_connection
-    |> loop
+    {:ok, connection_pid} = Connection.start_link(connection)
+    loop(%Connection.Telnet{connection | connection_pid: connection_pid})
   end
 
-  def loop(connection = %Connection.Telnet{socket: socket, transport: transport}) do
+  def loop(connection = %Connection.Telnet{socket: socket, transport: transport, connection_pid: connection_pid}) do
     case transport.recv(socket, 0, @tcp_timeout) do
       {:ok, <<255, _rest ::binary>>} -> 
         IO.puts "Rejecting Telnet Negotiation options."
@@ -31,7 +31,7 @@ defmodule Alchemud.Connections.Telnet.Handler do
       {:ok, data} ->
         IO.puts "Received data from telnet: #{inspect data}"
         connection
-        |> Connection.input_received(data)
+        |> Connection.input_received(connection_pid, data)
         |> __MODULE__.loop
         #formatted_data = IO.ANSI.format(["The ", :bright, "data", :normal, " is: ", :green, :bright, inspect(data)])
         #send_message(connection, formatted_data)

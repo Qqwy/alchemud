@@ -3,6 +3,7 @@
     The authentication module that asks for login information
     and also handles player registration.
     """
+    alias Alchemud.Players.Player
 
     use Fsm, initial_state: :idle, initial_data: %Player{}
     defstate idle do

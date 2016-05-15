@@ -30,5 +30,5 @@ defprotocol Alchemud.Connections.ConnectionProtocol do
 end
 
 defmodule Alchemud.Connections.Connection.Telnet do
-  defstruct socket: nil, transport: nil, player_pid: nil
+  defstruct socket: nil, transport: nil, connection_pid: nil, player_pid: nil
 end
