@@ -4,7 +4,7 @@ defmodule Alchemud.Commands.Behaviour do
   """
 
   # TODO: Find out what to actually pass here as player, instead of a `socket`.
-  @type player :: any
+  @type player :: %Alchemud.Players.Player{}
   @type command :: binary
 
   @doc """

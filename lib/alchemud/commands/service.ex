@@ -5,10 +5,10 @@ defmodule Alchemud.Commands.Service do
   Most importantly: Exiting.
   """
 
-  alias Alchemud.Connections.Connection
+  alias Alchemud.Players.Player
 
   def maybe_consume_command(player, msg) when msg in ["exit", "quit"] do
-    Connection.close(player)
+    Player.exit(player)
     true
   end
 

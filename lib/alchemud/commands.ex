@@ -4,7 +4,7 @@ defmodule Alchemud.Commands do
   """
 
   alias Alchemud.Commands.{Service, Universal, World}
-  alias Alchemud.Connections.Connection
+  alias Alchemud.Players.Player
 
   @do_not_understand_messages [
     "Can you restate that?",
@@ -24,16 +24,16 @@ defmodule Alchemud.Commands do
   """
 
 
-  def consume_command(connection, command) do
-    Service.maybe_consume_command(connection, command)
-    || Universal.maybe_consume_command(connection, command)
-    || World.maybe_consume_command(connection, command)
-    || print_do_not_understand_message(connection, command)
+  def consume_command(player, command) do
+    Service.maybe_consume_command(player, command)
+    || Universal.maybe_consume_command(player, command)
+    || World.maybe_consume_command(player, command)
+    || print_do_not_understand_message(player, command)
   end
 
-  def print_do_not_understand_message(connection, _command) do
+  def print_do_not_understand_message(player, _command) do
     message = @do_not_understand_messages |> Enum.random
-    Connection.send_message(connection, message)
+    Player.send_message(player, message)
     true
   end
 end

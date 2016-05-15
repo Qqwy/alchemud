@@ -17,7 +17,8 @@ defmodule Alchemud.Mixfile do
     [
       applications: [
         :logger, 
-        :ranch
+        :ranch,
+        :comeonin
       ],
       mod: {Alchemud, []}
     ]
@@ -37,7 +38,9 @@ defmodule Alchemud.Mixfile do
       {:exactor, "~> 2.2.0", warn_missing: false},  # Concise GenServer declarations
       {:fsm, "~> 0.2.0"},                           # Finite State Machine.
       {:ranch, "~> 1.1"},                           # Pooled TCP-server connections.
+      {:comeonin, "~> 2.4"},                        # BCrypt password hashing
       {:apex, "~>0.4.0"}                            # Pretty-printing.
+
     ]
   end
 end

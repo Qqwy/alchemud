@@ -1,4 +1,5 @@
 %{"apex": {:hex, :apex, "0.4.0"},
+  "comeonin": {:hex, :comeonin, "2.4.0"},
   "exactor": {:hex, :exactor, "2.2.0"},
   "fsm": {:hex, :fsm, "0.2.0"},
   "ranch": {:hex, :ranch, "1.2.1"}}

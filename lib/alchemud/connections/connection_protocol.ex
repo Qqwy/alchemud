@@ -14,6 +14,7 @@ defprotocol Alchemud.Connections.ConnectionProtocol do
   `message` is in IO.Chardata format.
 
   """
+  require Alchemud.Players.Player
   @type player :: %Alchemud.Players.Player{}
 
   @spec send_message(any, IO.Chardata.t) :: true | false
