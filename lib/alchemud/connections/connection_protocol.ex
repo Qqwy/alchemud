@@ -25,8 +25,8 @@ defprotocol Alchemud.Connections.ConnectionProtocol do
   @spec register_player(any, player) :: true | false
   def register_player(connection, player)
 
-  @spec whereis_player(any) :: pid
-  def whereis_player(connection)
+  @spec extract_player_pid(any) :: pid
+  def extract_player_pid(connection)
 end
 
 defmodule Alchemud.Connections.Connection.Telnet do

@@ -59,7 +59,8 @@ defmodule Alchemud.Connections.Connection do
   def input_received(connection, input) do
     input = prettify_input(input)
     # TODO: Restructure
-    Alchemud.Players.GenPlayer.message(ConnectionProtocol.whereis_player(connection), connection, input)
+    player_pid = ConnectionProtocol.extract_player_pid(connection)
+    Alchemud.Players.GenPlayer.message(player_pid, connection, input)
     #Alchemud.Commands.consume_command(connection, input)
     send_prompt(connection)
     connection
@@ -110,8 +111,4 @@ defmodule Alchemud.Connections.Connection do
   defp send_prompt(connection) do
     send_message(connection, @prompt, newline: false)
   end
-
-
-
-
 end

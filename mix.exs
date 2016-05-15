@@ -35,6 +35,7 @@ defmodule Alchemud.Mixfile do
   defp deps do
     [
       {:exactor, "~> 2.2.0", warn_missing: false},  # Concise GenServer declarations
+      {:fsm, "~> 0.2.0"},                           # Finite State Machine.
       {:ranch, "~> 1.1"},                           # Pooled TCP-server connections.
       {:apex, "~>0.4.0"}                            # Pretty-printing.
     ]

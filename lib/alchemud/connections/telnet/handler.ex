@@ -84,7 +84,7 @@ defmodule Alchemud.Connections.Telnet.Handler do
       %Connection.Telnet{connection | player_pid: player_pid}
     end
 
-    def whereis_player(%Connection.Telnet{player_pid: pid}), do: pid
+    def extract_player_pid(%Connection.Telnet{player_pid: pid}), do: pid
   end
 
 end
