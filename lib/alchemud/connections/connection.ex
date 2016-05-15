@@ -73,18 +73,18 @@ defmodule Alchemud.Connections.Connection do
   end
 
   # We have a connected player
-  defcast input_received(connection_handler, input), state: %ConnectionState{connection_handler: connection_handler, player: player = %Player{}} do
+  defcast input_received(connection_handler, input), state: state =  %ConnectionState{player: player = %Player{}} do
     input = prettify_input(input)
     # TODO: Move commands into Player
-    Alchemud.Commands.consume_command(connection_handler, input)
-    send_prompt(connection_handler)
+    Alchemud.Commands.consume_command(state, input)
+    send_prompt(state)
     noreply
   end
 
   # We are still authenticating. Gatekeeper handles control flow here.
   defcast input_received(connection_handler, input), state: state = %ConnectionState{gatekeeper: gatekeeper} do
     input = prettify_input(input)
-    case Gatekeeper.auth(gatekeeper, state, input) do
+    case IO.inspect Gatekeeper.auth(gatekeeper, state, input) do
       {player = %Player{}, gatekeeper = %Gatekeeper{}} -> # Logged in
         send_prompt(state)
         new_state(%ConnectionState{state | gatekeeper: gatekeeper, player: player})
@@ -143,16 +143,21 @@ defmodule Alchemud.Connections.Connection do
     ConnectionProtocol.send_message(connection_handler, message)
   end
 
-  def send_message(connection_state, message) do
+  def send_message(connection_state, message, newline: true) do
     send_message(connection_state, [message, "\r\n"], newline: false)
   end
+
+  def send_message(connection_state, message) do
+    send_message(connection_state, message, newline: true)
+  end
+
 
   @doc """
   Closes the `connection`, prints good bye message.
   """
   def close(connection_state = %ConnectionState{connection_handler: connection_handler}) do
     send_message(connection_state, "\r\nGood bye!\r\n")
-    ConnectionProtocol.close(connection_state)
+    ConnectionProtocol.close(connection_handler)
   end
 
   defp send_welcome_message(connection_state) do

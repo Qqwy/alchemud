@@ -21,9 +21,9 @@
     end
 
     defstate login_password do
-      defevent auth(connection, password), data: %Player{password: password} do
+      defevent auth(connection, password), data: player = %Player{password: password} do
         Connection.send_message connection, "Password is right! Welcome!"
-        next_state(:signed_in)
+        respond(player, :signed_in)
       end
 
       defevent auth(connection, password), data: %Player{password: _actual_password} do
@@ -40,10 +40,10 @@
     end
 
     defstate register_password_confirm do
-      defevent auth(connection, password_confirm), data: %Player{password: password} do
+      defevent auth(connection, password_confirm), data: player = %Player{password: password} do
         if password == password_confirm do
           Connection.send_message connection, "You are now signed up! Welcome!"
-          next_state(:signed_in)
+          respond(player, :signed_in)
         else
           Connection.send_message connection, "Heh, those passwords do not match. Please try again:\r\n\r\nPlease enter a password so I will remember you in the future:"
           next_state(:register_password)
