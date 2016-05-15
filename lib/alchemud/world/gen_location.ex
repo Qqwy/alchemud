@@ -72,9 +72,9 @@ defmodule Alchemud.World.GenLocation do
     Apex.ap [ref, pid, reason]
 
     # Filter exits
-    exits = Enum.reject(exits, fn %Way{pid: way_pid} -> pid == way_pid end)
+    exits = Enum.reject(exits, &match?(%Way{pid: pid}, &1) )
     # TODO: Filter contents?
-    contents = Enum.reject(contents, fn %Entity{pid: entity_pid} -> pid == entity_pid end)
+    contents = Enum.reject(contents, &match?(%Entity{pid: pid}, &1))
 
     new_state(%Location{state | exits: exits, contents: contents})
   end

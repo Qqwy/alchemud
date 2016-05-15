@@ -1,4 +1,8 @@
 defmodule Alchemud.Commands.Behaviour do
+  @moduledoc """
+  Anything that can consume commands should adhere to this Behaviour.
+  """
+
   # TODO: Find out what to actually pass here as player, instead of a `socket`.
   @type player :: any
   @type command :: binary

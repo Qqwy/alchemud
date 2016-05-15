@@ -18,10 +18,9 @@ defmodule Alchemud.Connections.Telnet.Handler do
     :ok = :ranch.accept_ack(ref)
     IO.puts "New telnet connection! [socket: #{inspect socket}]"
     
-    Connection.new_connection(connection)
-    #send_welcome_message(connection)
-    #send_console_start(connection)
-    loop(connection)
+    connection
+    |> Connection.new_connection
+    |> loop
   end
 
   def loop(connection = %Connection.Telnet{socket: socket, transport: transport}) do
@@ -31,16 +30,17 @@ defmodule Alchemud.Connections.Telnet.Handler do
         __MODULE__.loop(connection)
       {:ok, data} ->
         IO.puts "Received data from telnet: #{inspect data}"
-        Connection.input_received(connection, data)
+        connection
+        |> Connection.input_received(data)
+        |> __MODULE__.loop
         #formatted_data = IO.ANSI.format(["The ", :bright, "data", :normal, " is: ", :green, :bright, inspect(data)])
         #send_message(connection, formatted_data)
 
         #Alchemud.Commands.consume_command(connection, data)
 
         #send_console_start(connection)
-        __MODULE__.loop(connection) # Ensure that code is reloaded, if module was recompiled.
       _ ->
-        send_message(connection, "\r\n\r\nFor safekeeping, the connection will now be closed.")
+        Connection.send_message(connection, "\r\n\r\nFor safekeeping, the connection will now be closed.")
         __MODULE__.close(connection)
     end
   end
@@ -77,6 +77,14 @@ defmodule Alchemud.Connections.Telnet.Handler do
     def close(connection) do
       Alchemud.Connections.Telnet.Handler.close(connection)
     end
+
+    def register_player(connection, player) do
+      IO.puts "FOOBAR"
+      {:ok, player_pid} = Alchemud.Players.GenPlayer.start_link(connection)
+      %Connection.Telnet{connection | player_pid: player_pid}
+    end
+
+    def whereis_player(%Connection.Telnet{player_pid: pid}), do: pid
   end
 
 end

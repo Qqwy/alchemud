@@ -23,18 +23,8 @@ defmodule Alchemud.Commands do
   if nothing found, will itself consume the command, and print an 'I do not understand' message to the player.
   """
 
-  @doc """
-  Removes any non-printing-characters from the command,  (TODO)
-  as well as starting/trailing whitespace.
-  
-  """
-  def prettify_command(command) do
-    command
-    |> String.strip
-  end
 
   def consume_command(connection, command) do
-    command = prettify_command(command)
     Service.maybe_consume_command(connection, command)
     || Universal.maybe_consume_command(connection, command)
     || World.maybe_consume_command(connection, command)

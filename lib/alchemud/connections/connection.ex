@@ -1,5 +1,6 @@
 defmodule Alchemud.Connections.Connection do
   alias Alchemud.Connections.ConnectionProtocol 
+  alias Alchemud.Players.Player
 
 
   @welcome_message """
@@ -42,8 +43,11 @@ defmodule Alchemud.Connections.Connection do
   prints the welcome screen.
   """
   def new_connection(connection) do
-    send_welcome_message(connection)
-    send_prompt(connection)
+    connection
+    |> send_welcome_message
+    |> IO.inspect
+    |> ConnectionProtocol.register_player(%Player{})
+    |> send_prompt
   end
 
   @doc """
@@ -53,8 +57,23 @@ defmodule Alchemud.Connections.Connection do
   `input` ought to be a binary string.
   """
   def input_received(connection, input) do
-    Alchemud.Commands.consume_command(connection, input)
+    input = prettify_input(input)
+    # TODO: Restructure
+    Alchemud.Players.GenPlayer.message(ConnectionProtocol.whereis_player(connection), connection, input)
+    #Alchemud.Commands.consume_command(connection, input)
     send_prompt(connection)
+    connection
+  end
+
+
+  @doc """
+  Removes any non-printing-characters from the command,  (TODO)
+  as well as starting/trailing whitespace.
+  
+  """
+  defp prettify_input(input) do
+    input
+    |> String.strip
   end
 
   @doc """
@@ -69,7 +88,7 @@ defmodule Alchemud.Connections.Connection do
   def send_message(connection, message, opts)
   def send_message(connection, message, newline: false) do
     ConnectionProtocol.send_message(connection, message)
-    true
+    connection
   end
 
   def send_message(connection, message) do
