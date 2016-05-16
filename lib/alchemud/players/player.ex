@@ -34,12 +34,4 @@ defmodule Alchemud.Players.Player do
     Process.link(character)
     %Player{player | character: character}
   end
-
-  def look_at_location(player = %Player{}) do
-    Character.look_at_location(player)
-  end
-
-  def list_exits(player = %Player{}) do
-    Character.list_exits(player)
-  end
 end

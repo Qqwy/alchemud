@@ -40,23 +40,12 @@ defmodule Alchemud.Connections.Connection do
   defmodule ConnectionState do
     defstruct gatekeeper: nil, player: nil, connection_handler: nil 
   end
+
+  
   alias Alchemud.Connections.Connection.ConnectionState
   alias Alchemud.Connections.Gatekeeper
 
   @prompt IO.ANSI.format([:green, :bright, "~> ", :normal])
-
-  @doc """
-  Called by a connection handler when a new connection has been established.
-
-  prints the welcome screen.
-  """
-  # def new_connection(connection) do
-  #   connection
-  #   |> send_welcome_message
-  #   |> IO.inspect
-  #   |> ConnectionProtocol.register_player(%Player{})
-  #   |> send_prompt
-  # end
 
   @doc """
   To be called from a Connection Handler process.
@@ -73,7 +62,7 @@ defmodule Alchemud.Connections.Connection do
   end
 
   # We have a connected player
-  defcast input_received(connection_handler, input), state: conn_state =  %ConnectionState{player: player = %Player{}} do
+  defcast input_received(input), state: conn_state =  %ConnectionState{player: player = %Player{}} do
     input = prettify_input(input)
     # TODO: Move commands into Player
     Alchemud.Players.Player.input_received(%Player{player | connection: conn_state}, input)
@@ -82,7 +71,7 @@ defmodule Alchemud.Connections.Connection do
   end
 
   # We are still authenticating. Gatekeeper handles control flow here.
-  defcast input_received(connection_handler, input), state: conn_state = %ConnectionState{gatekeeper: gatekeeper} do
+  defcast input_received(input), state: conn_state = %ConnectionState{gatekeeper: gatekeeper} do
     input = prettify_input(input)
     case IO.inspect Gatekeeper.auth(gatekeeper, conn_state, input) do
       {player = %Player{}, gatekeeper = %Gatekeeper{}} -> # Logged in
@@ -97,28 +86,11 @@ defmodule Alchemud.Connections.Connection do
 
 
   @doc """
-  Called by a connection handler when incoming data is received.
-  
-  `connection` ought to be a struct that implements the ConnectionProtocol.
-  `input` ought to be a binary string.
-  """
-  # def input_received(connection, input) do
-  #   input = prettify_input(input)
-  #   # TODO: Restructure
-  #   player_pid = ConnectionProtocol.extract_player_pid(connection)
-  #   Alchemud.Players.GenPlayer.message(player_pid, connection, input)
-  #   #Alchemud.Commands.consume_command(connection, input)
-  #   send_prompt(connection)
-  #   connection
-  # end
-
-
-  @doc """
   Removes any non-printing-characters from the command,  (TODO)
   as well as starting/trailing whitespace.
   
   """
-  defp prettify_input(input) do
+  def prettify_input(input) do
     input
     |> String.strip
   end
@@ -135,7 +107,7 @@ defmodule Alchemud.Connections.Connection do
 
 
   def send_message(conn_state, message, opts \\ [])
-  def send_message(conn_state = %ConnectionState{connection_handler: connection_handler}, message, [newline: false]) do
+  def send_message(%ConnectionState{connection_handler: connection_handler}, message, [newline: false]) do
     ConnectionProtocol.send_message(connection_handler, message)
   end
 

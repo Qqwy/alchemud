@@ -25,10 +25,15 @@ defmodule Alchemud.Commands do
 
 
   def consume_command(player, command) do
-    Service.maybe_consume_command(player, command)
-    || Universal.maybe_consume_command(player, command)
-    || World.maybe_consume_command(player, command)
-    || print_do_not_understand_message(player, command)
+    try do
+      Service.maybe_consume_command(player, command)
+      || Universal.maybe_consume_command(player, command)
+      || World.maybe_consume_command(player, command)
+      || print_do_not_understand_message(player, command)
+    rescue e ->
+      IO.inspect "ERROR ENCOUNTERED: \r\n#{inspect e}"#\r\n\r\n #{inspect stacktrace}\r\n\r\n"
+      print_do_not_understand_message(player, command)
+    end
   end
 
   def print_do_not_understand_message(player, _command) do

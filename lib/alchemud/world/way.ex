@@ -7,14 +7,18 @@ defmodule Alchemud.World.Way do
   
   use ExActor.GenServer
 
-  defstart start_link(initial_state = %Way{entrance: entrance_location, exit: exit_location, name: name}), gen_server_opts: [name: {:global, {:way, {entrance_location, exit_location, name}}}] do
-    IO.inspect initial_state
+  defstart start_link(init_state = %Way{}), gen_server_opts: [name: process_name(init_state)] do
+    IO.inspect init_state
     send(self, :ping_entrance)
-    initial_state(initial_state)
+    initial_state(init_state)
+  end
+
+  def process_name(%Way{entrance: entrance_location, exit: exit_location, name: name}) do
+    {:global, {:way, {entrance_location, exit_location, name}}}
   end
 
   defcall get, state: state, do: reply(state) 
-  defcall get_exit, state: state = %Way{exit: exit_location} , do: reply(exit_location) 
+  defcall get_exit, state: state = %Way{} , do: reply(state.exit_location) 
 
   # TODO: Add logic to re-call ping_entrance once entrance location is down (Monitor it!).
   defhandleinfo :ping_entrance, state: state = %Way{} do
@@ -29,7 +33,7 @@ defmodule Alchemud.World.Way do
   end
 
   # TODO: make pattern-match only for the monitored entrance process.
-  defhandleinfo {:DOWN, ref, :process, _pid, _reason} do
+  defhandleinfo {:DOWN, _ref, :process, _pid, _reason} do
     Process.send_after(self, :ping_entrance, @exit_check_interval)
     noreply
   end
@@ -39,7 +43,7 @@ defmodule Alchemud.World.Way do
     :ok = Alchemud.World.Location.add_exit(entrance_pid, self, state)
   end
 
-  defp entrance_pid(state = %Way{entrance: entrance_uuid}) do
+  defp entrance_pid(%Way{entrance: entrance_uuid}) do
     IO.inspect "entrance: #{inspect entrance_uuid}"
     Alchemud.World.LocationManager.whereis_location(entrance_uuid)
   end

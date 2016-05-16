@@ -40,7 +40,7 @@ defmodule Alchemud.World.Character do
     Player.send_message(player, ["you see exits leading to the: ", :blue, exits])
   end
 
-  def shutdown(player) do
+  def shutdown(_player) do
     exit(:shutdown)
   end
 end

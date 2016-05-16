@@ -14,12 +14,16 @@ defmodule Alchemud.World.Location do
   alias Alchemud.World.{Way, Entity}
 
 
-  defstart start_link(state = %Location{module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:location, uuid}}] do
+  defstart start_link(init_state = %Location{}), gen_server_opts: [name: process_name(init_state)] do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
     Process.flag(:trap_exit, true) # Trap Entity exits.
 
-    add_incoming_ways(state)
-    initial_state(state)
+    add_incoming_ways(init_state)
+    initial_state(init_state)
+  end
+
+  def process_name(%Location{uuid: uuid}) do
+    {:global, {:location, uuid}}
   end
 
   defcall get, state: state, do: reply(state) 
@@ -34,7 +38,7 @@ defmodule Alchemud.World.Location do
   Adds a Way to the list of tis Location's exits.
   TODO: Find out if storing Way's PID is better than storing its UUID.
   """
-  defcall add_exit(way_pid, way = %Way{name: exit_name}), state: state = %Location{ways: ways, exits: exits} do
+  defcall add_exit(way_pid, way = %Way{}), state: state = %Location{exits: exits} do
     IO.puts "Adding exit:"
     Apex.ap way_pid
     Apex.ap way
@@ -77,9 +81,9 @@ defmodule Alchemud.World.Location do
     Apex.ap [ref, pid, reason]
 
     # Filter exits
-    exits = Enum.reject(exits, &match?(%Way{pid: pid}, &1) )
+    exits = Enum.reject(exits, &match?(%Way{pid: ^pid}, &1) )
     # TODO: Filter contents?
-    contents = Enum.reject(contents, &match?(%Entity{pid: pid}, &1))
+    contents = Enum.reject(contents, &match?(%Entity{pid: ^pid}, &1))
 
     new_state(%Location{state | exits: exits, contents: contents})
   end
@@ -89,14 +93,14 @@ defmodule Alchemud.World.Location do
   """
   defhandleinfo {:EXIT, pid, reason}, state: state = %Location{contents: contents} do
     IO.inspect "Trapped exit from #{inspect pid}, reason: #{inspect reason}"
-    contents = Enum.reject(contents, &match?(%Entity{pid: pid}, &1))
+    contents = Enum.reject(contents, &match?(%Entity{pid: ^pid}, &1))
     new_state(%Location{state | contents: contents})
   end
 
   # TODO: FIND OUT WHY CATCHALL is necessary here? Why do ways crash and notify the locations using :DOWN
   defhandleinfo _, do: noreply
 
-  defp add_incoming_ways(state = %Location{ways: ways, uuid: uuid}) do
+  defp add_incoming_ways(%Location{ways: ways, uuid: uuid}) do
     IO.puts "Adding incoming ways"
     Apex.ap ways
     for %{entrance_uuid: entrance_uuid, name: name} <- ways do

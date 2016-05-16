@@ -12,7 +12,7 @@ defmodule Alchemud.Commands.Service do
     true
   end
 
-  def maybe_consume_command(player, _) do
+  def maybe_consume_command(_player, _) do
     nil
   end
 end

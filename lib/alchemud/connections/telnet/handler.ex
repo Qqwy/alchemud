@@ -1,7 +1,7 @@
 defmodule Alchemud.Connections.Telnet.Handler do
   @tcp_timeout 360_000
 
-  alias Alchemud.Connections.{Connection, HandlerBehaviour}
+  alias Alchemud.Connections.Connection
 
   # @behaviour HandlerBehaviour
 
@@ -14,11 +14,10 @@ defmodule Alchemud.Connections.Telnet.Handler do
     {:ok, pid}
   end
 
-  def init(ref, connection = %Connection.Telnet{socket: socket, transport: transport}, _opts = []) do
+  def init(ref, connection = %Connection.Telnet{}, _opts = []) do
     :ok = :ranch.accept_ack(ref)
-    IO.puts "New telnet connection! [socket: #{inspect socket}]"
+    IO.puts "New telnet connection! [socket: #{inspect connection.socket}]"
     
-    connection
     {:ok, connection_pid} = Connection.start_link(connection)
     loop(%Connection.Telnet{connection | connection_pid: connection_pid})
   end
@@ -30,7 +29,7 @@ defmodule Alchemud.Connections.Telnet.Handler do
         __MODULE__.loop(connection)
       {:ok, data} ->
         IO.puts "Received data from telnet: #{inspect data}"
-        Connection.input_received(connection_pid, connection, data)
+        Connection.input_received(connection_pid, data)
         __MODULE__.loop(connection)
         #formatted_data = IO.ANSI.format(["The ", :bright, "data", :normal, " is: ", :green, :bright, inspect(data)])
         #send_message(connection, formatted_data)
@@ -63,7 +62,7 @@ defmodule Alchemud.Connections.Telnet.Handler do
     true
   end
 
-  def close(connection = %Connection.Telnet{socket: socket, transport: transport}) do
+  def close(%Connection.Telnet{socket: socket, transport: transport}) do
     IO.puts "telnet connection quit! [socket: #{inspect socket}]"
     :ok = transport.close(socket)
   end

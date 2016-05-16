@@ -7,11 +7,15 @@ defmodule Alchemud.World.Entity do
   
 
 
-  defstart start(init_state = %Entity{module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:entity, Map.get(init_state, :uuid)}}] do
+  defstart start(init_state = %Entity{}), gen_server_opts: [name: process_name(init_state)] do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
     init_state
     |> add_to_container
     |> initial_state
+  end
+
+  def process_name(%Entity{uuid: uuid}) do
+    {:global, {:entity, uuid}}
   end
 
   defcall get, state: state, do: reply(state) 
@@ -32,6 +36,11 @@ defmodule Alchemud.World.Entity do
   defcall get_location_pid, state: state do
     # TODO: keep containers in mind
     reply(state.container_pid)
+  end
+
+  defcall move_to(container_uuid), state: state do
+    state = add_to_container(%Entity{state | container_uuid: container_uuid})
+    set_and_reply(state, state.container_pid)
   end
 
   def location_info(state = %Entity{}) do

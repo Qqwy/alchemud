@@ -35,7 +35,8 @@ defmodule Alchemud.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:exactor, "~> 2.2.0", warn_missing: false},  # Concise GenServer declarations
+      #{:exactor, "~> 2.2.0", warn_missing: false},  # Concise GenServer declarations
+      {:exactor, "~>2.2.0", github: "sasa1977/exactor"},
       {:fsm, "~> 0.2.0"},                           # Finite State Machine.
       {:ranch, "~> 1.1"},                           # Pooled TCP-server connections.
       {:comeonin, "~> 2.4"},                        # BCrypt password hashing

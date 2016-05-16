@@ -34,9 +34,7 @@ defmodule Alchemud.World.LocationManager do
     end
   end
 
-  @doc """
-  STUB
-  """
+  # STUB
   defp load_from_persistent_storage do
     [
       %Location{module: Alchemud.World.Location.Forest, name: "The small forest path", uuid: "forest1", description: "foobar", ways: [
