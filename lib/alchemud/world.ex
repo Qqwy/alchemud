@@ -5,13 +5,16 @@ defmodule Alchemud.World do
   """
   alias Alchemud.World.{LocationManager, EntityManager}
 
+  use ExActor.GenServer
+
   @tick_interval 10000
 
   def tick_interval, do: @tick_interval
 
-  def start do
+  defstart start_link do
     LocationManager.start
     EntityManager.start
+    initial_state(:i_am_happy_and_you_know_it)
   end
 
   @doc """

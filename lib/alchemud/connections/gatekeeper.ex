@@ -38,7 +38,8 @@
 
     defstate idle do
       defevent auth(connection, name), data: player = %Player{} do
-        # TODO: Name validation. (no spaces, auto-capitalize, etc)
+        # TODO: Name validation. (no spaces, auto-capitalize, etc) -> extra error path.
+        name = sanitize_name(name)
         existing_player = find_player_by_name(name)
         if existing_player do
           send_message(connection, "#{name}, eh? Please enter your password:")
@@ -98,5 +99,12 @@
 
     defp find_player_by_name(name) do
       Alchemud.Players.possible_players |> Enum.find(&match?(%Player{name: ^name}, &1))
+    end
+
+    defp sanitize_name(name) do
+      name
+      |> String.replace(~r{\W}, "")
+      |> String.replace("_", "-")
+      |> String.capitalize
     end
   end

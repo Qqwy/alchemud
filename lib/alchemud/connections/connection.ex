@@ -87,6 +87,7 @@ defmodule Alchemud.Connections.Connection do
     case IO.inspect Gatekeeper.auth(gatekeeper, conn_state, input) do
       {player = %Player{}, gatekeeper = %Gatekeeper{}} -> # Logged in
         send_prompt(conn_state)
+        player = Alchemud.Players.Player.logged_in(%Player{player | connection: conn_state})
         new_state(%ConnectionState{conn_state | gatekeeper: gatekeeper, player: player})
       gatekeeper = %Gatekeeper{} -> # Still in gatekeeperland
         send_prompt(conn_state)

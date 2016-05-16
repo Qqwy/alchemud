@@ -1,5 +1,8 @@
 defmodule Alchemud.Players.Player do
-  defstruct name: nil, password: nil, logged_in_at: nil, connection: nil
+  defstruct name: nil, password: nil, logged_in_at: nil, connection: nil, character: nil
+  alias Alchemud.Players.Player
+  alias Alchemud.World.Character
+  alias Alchemud.Connections.Connection
 
   @doc """
   Sends a message to this player (i.e. the person connected to this player)
@@ -9,7 +12,7 @@ defmodule Alchemud.Players.Player do
     IO.inspect player
     IO.inspect message
     IO.inspect opts
-    Alchemud.Connections.Connection.send_message(player.connection, message, opts)
+    Connection.send_message(player.connection, message, opts)
   end
 
   @doc """
@@ -22,6 +25,15 @@ defmodule Alchemud.Players.Player do
   end
 
   def exit(player) do
-    Alchemud.Connections.Connection.close(player.connection)
+    Connection.close(player.connection)
+  end
+
+  def logged_in(player = %Player{}) do
+    {:ok, character} = Character.start_link(player)
+    %Player{player | character: character}
+  end
+
+  def look_at_location(player = %Player{}) do
+    Character.look_at_location(player)
   end
 end

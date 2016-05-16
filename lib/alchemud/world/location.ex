@@ -90,7 +90,7 @@ defmodule Alchemud.World.Location do
     IO.puts "Adding incoming ways"
     Apex.ap ways
     for %{entrance_uuid: entrance_uuid, name: name} <- ways do
-      Alchemud.World.GenWay.start_link(%Way{entrance: entrance_uuid, exit: uuid, name: name })
+      Alchemud.World.Way.start_link(%Way{entrance: entrance_uuid, exit: uuid, name: name })
     end
   end
 end

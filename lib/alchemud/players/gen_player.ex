@@ -1,3 +1,4 @@
+# DEPRECATED
 defmodule Alchemud.Players.GenPlayer do
   use ExActor.GenServer
 

@@ -10,7 +10,8 @@ defmodule Alchemud do
       # Define workers and child supervisors to be supervised
       # worker(Alchemud.Worker, [arg1, arg2, arg3]),
       supervisor(Alchemud.World.Supervisor,[]),
-      supervisor(Alchemud.Connections.Supervisor,[])
+      supervisor(Alchemud.Connections.Supervisor,[]),
+      worker(Alchemud.World, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

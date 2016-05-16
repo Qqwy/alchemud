@@ -7,6 +7,12 @@ defmodule Alchemud.Commands.World do
   Dispatches to the player object/location, which might have more implementations of specific command-handlers.
   """
 
+  alias Alchemud.Players.Player
+
+  def maybe_consume_command(player, "look") do
+    Player.look_at_location(player)
+  end  
+
   def maybe_consume_command(_player, _command) do
     nil
   end
