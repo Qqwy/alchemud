@@ -1,4 +1,4 @@
-%{"apex": {:hex, :apex, "0.4.0", "85048fd201a06d3427d5c607d22f080a52473d737343afd0c427f9bb64239af5", [:mix], []},
+%{"apex": {:hex, :apex, "0.5.0", "b29bd9e2ff0da2344e6cb069705d38ce95191653ec6f5616f18c64527a547cdb", [:mix], []},
   "bbmustache": {:hex, :bbmustache, "1.0.4", "7ba94f971c5afd7b6617918a4bb74705e36cab36eb84b19b6a1b7ee06427aa38", [:rebar], []},
   "cf": {:hex, :cf, "0.2.1", "69d0b1349fd4d7d4dc55b7f407d29d7a840bf9a1ef5af529f1ebe0ce153fc2ab", [:rebar3], []},
   "comeonin": {:hex, :comeonin, "2.4.0", "2dc7526b6352f7cf03de79c1e19b5154ac021da48b0c1790a12841ef5ca00340", [:mix, :make, :make], []},

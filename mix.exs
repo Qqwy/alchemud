@@ -18,10 +18,7 @@ defmodule Alchemud.Mixfile do
       applications: [
         :logger, 
         :ranch,
-        :comeonin,
-
-        :apex,
-        :fsm
+        :comeonin
       ],
       mod: {Alchemud, []}
     ]
@@ -42,9 +39,9 @@ defmodule Alchemud.Mixfile do
       {:fsm, "~> 0.2.0"},                           # Finite State Machine.
       {:ranch, "~> 1.1"},                           # Pooled TCP-server connections.
       {:comeonin, "~> 2.4"},                        # BCrypt password hashing
-      {:exrm, "~> 1.0"},                            # Release Manager
+      #{:exrm, "~> 1.0"},                            # Release Manager
 
-      {:apex, "~>0.4.0"}                            # Pretty-printing.
+      {:apex, "~>0.5.0"}                            # Pretty-printing.
 
     ]
   end
