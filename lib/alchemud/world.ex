@@ -27,11 +27,11 @@ defmodule Alchemud.World do
   def dg(uuid) do
     loc = LocationManager.whereis_location(uuid)
     if loc do
-      loc |> Alchemud.World.GenLocation.get
+      loc |> Alchemud.World.Location.get
     else
       entity = EntityManager.whereis_entity(uuid)
       if entity do
-        entity |> Alchemud.World.GenEntity.get
+        entity |> Alchemud.World.Entity.get
       else
         nil
       end

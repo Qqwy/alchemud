@@ -9,7 +9,7 @@ defmodule Alchemud.World.EntityManager do
   alias Alchemud.World.Entity
 
   def start_entity(initial_state) do
-    Alchemud.World.GenEntity.start(initial_state)
+    Alchemud.World.Entity.start(initial_state)
   end
 
 

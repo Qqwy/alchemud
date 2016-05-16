@@ -9,7 +9,6 @@ defmodule Alchemud.World.LocationManager do
   alias Alchemud.World.Location
 
   def start_location(initial_state) do
-    #Alchemud.World.GenLocation.start(initial_state)
     Alchemud.World.LocationSupervisor.start_child(initial_state)
   end
 

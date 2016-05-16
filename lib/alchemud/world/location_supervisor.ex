@@ -7,7 +7,7 @@ defmodule Alchemud.World.LocationSupervisor do
 
   def init(_) do
     children = [
-      worker(Alchemud.World.GenLocation, [], restart: :transient)
+      worker(Alchemud.World.Location, [], restart: :transient)
     ]
 
     supervise(children, strategy: :simple_one_for_one)

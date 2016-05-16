@@ -34,7 +34,7 @@ defmodule Alchemud.World.GenWay do
 
   defp add_as_exit_to_entrance_location(entrance_pid, state = %Way{}) when is_pid(entrance_pid) do
     Process.monitor(entrance_pid)
-    :ok = Alchemud.World.GenLocation.add_exit(entrance_pid, self, state)
+    :ok = Alchemud.World.Location.add_exit(entrance_pid, self, state)
   end
 
   defp entrance_pid(state = %Way{entrance: entrance_uuid}) do
