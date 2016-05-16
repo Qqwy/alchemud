@@ -16,6 +16,7 @@ defmodule Alchemud.World.Location do
 
   defstart start_link(state = %Location{module: _, uuid: uuid}), gen_server_opts: [name: {:global, {:location, uuid}}] do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
+    Process.flag(:trap_exit, true) # Trap Entity exits.
 
     add_incoming_ways(state)
     initial_state(state)
@@ -52,7 +53,7 @@ defmodule Alchemud.World.Location do
     IO.puts "Adding entity:"
     Apex.ap entity_pid
     Apex.ap entity
-    Process.monitor(entity_pid)
+    Process.link(entity_pid)
     new_state = %Location{state | contents: [%Entity{entity | pid: entity_pid} | contents]}
     Apex.ap new_state
     set_and_reply(new_state, :ok)
@@ -81,6 +82,15 @@ defmodule Alchemud.World.Location do
     contents = Enum.reject(contents, &match?(%Entity{pid: pid}, &1))
 
     new_state(%Location{state | exits: exits, contents: contents})
+  end
+
+  @doc """
+  Called when a character exits.
+  """
+  defhandleinfo {:EXIT, pid, reason}, state: state = %Location{contents: contents} do
+    IO.inspect "Trapped exit from #{inspect pid}, reason: #{inspect reason}"
+    contents = Enum.reject(contents, &match?(%Entity{pid: pid}, &1))
+    new_state(%Location{state | contents: contents})
   end
 
   # TODO: FIND OUT WHY CATCHALL is necessary here? Why do ways crash and notify the locations using :DOWN

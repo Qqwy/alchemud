@@ -13,6 +13,10 @@ defmodule Alchemud.Commands.World do
     Player.look_at_location(player)
   end  
 
+  def maybe_consume_command(player, "exits") do
+    Player.list_exits(player)
+  end 
+
   def maybe_consume_command(_player, _command) do
     nil
   end

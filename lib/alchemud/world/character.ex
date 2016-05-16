@@ -1,6 +1,8 @@
 defmodule Alchemud.World.Character do
   alias Alchemud.Players.Player
   alias Alchemud.World.Entity
+  alias Alchemud.World.Location
+  alias Alchemud.World.Way
 
   @behaviour Alchemud.World.Entity.Behaviour
 
@@ -10,10 +12,10 @@ defmodule Alchemud.World.Character do
     entity_state_map
   end
 
-  def start_link(player) do
+  def start(player) do
     player
     |> load_character_info
-    |> Alchemud.World.Entity.start_link
+    |> Alchemud.World.Entity.start
   end
 
 
@@ -24,8 +26,21 @@ defmodule Alchemud.World.Character do
     |> Apex.ap
   end
 
-  def look_at_location(player = %Player{character: character}) do
-    location_info = Entity.get_location_info(character)
+  def look_at_location(player = %Player{}) do
+    location_pid = Entity.get_location_pid(player.character)
+    location_info = Location.get(location_pid)
     Player.send_message(player, [:red, location_info.name, "\r\n\r\n", :white, location_info.description])
+  end
+
+  def list_exits(player = %Player{}) do
+    exits = Entity.get_location_pid(player.character)
+    |> Location.exits
+    |> Enum.map(fn %Way{name: name} -> name end)
+    |> Enum.join(", ")
+    Player.send_message(player, ["you see exits leading to the: ", :blue, exits])
+  end
+
+  def shutdown(player) do
+    exit(:shutdown)
   end
 end

@@ -25,15 +25,21 @@ defmodule Alchemud.Players.Player do
   end
 
   def exit(player) do
+    Character.shutdown(player)
     Connection.close(player.connection)
   end
 
   def logged_in(player = %Player{}) do
-    {:ok, character} = Character.start_link(player)
+    {:ok, character} = Character.start(player)
+    Process.link(character)
     %Player{player | character: character}
   end
 
   def look_at_location(player = %Player{}) do
     Character.look_at_location(player)
+  end
+
+  def list_exits(player = %Player{}) do
+    Character.list_exits(player)
   end
 end
