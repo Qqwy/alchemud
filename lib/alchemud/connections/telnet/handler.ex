@@ -76,14 +76,6 @@ defmodule Alchemud.Connections.Telnet.Handler do
     def close(connection) do
       Alchemud.Connections.Telnet.Handler.close(connection)
     end
-
-    def register_player(connection, player) do
-      IO.puts "FOOBAR"
-      {:ok, player_pid} = Alchemud.Players.GenPlayer.start_link(connection)
-      %Connection.Telnet{connection | player_pid: player_pid}
-    end
-
-    def extract_player_pid(%Connection.Telnet{player_pid: pid}), do: pid
   end
 
 end

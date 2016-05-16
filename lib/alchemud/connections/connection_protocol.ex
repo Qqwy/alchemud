@@ -23,13 +23,13 @@ defprotocol Alchemud.Connections.ConnectionProtocol do
   @spec close(any) :: true | false
   def close(connection)
 
-  @spec register_player(any, player) :: true | false
-  def register_player(connection, player)
+  # @spec register_player(any, player) :: true | false
+  # def register_player(connection, player)
 
-  @spec extract_player_pid(any) :: pid
-  def extract_player_pid(connection)
+  # @spec extract_player_pid(any) :: pid
+  # def extract_player_pid(connection)
 end
 
 defmodule Alchemud.Connections.Connection.Telnet do
-  defstruct socket: nil, transport: nil, connection_pid: nil, player_pid: nil
+  defstruct socket: nil, transport: nil, connection_pid: nil
 end

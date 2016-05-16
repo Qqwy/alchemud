@@ -22,7 +22,11 @@ defmodule Alchemud.World.GenEntity do
     new_state(new_state)
   end
 
-  def add_to_container(state = %Entity{container_uuid: container_uuid, container_pid: old_container_pid}) do
+  def location_info(state = %Entity{}) do
+    state.container_pid |> Alchemud.World.GenLocation.get
+  end
+
+  defp add_to_container(state = %Entity{container_uuid: container_uuid, container_pid: old_container_pid}) do
     if old_container_pid, do: Process.unlink(old_container_pid)
     container_pid = Alchemud.World.LocationManager.whereis_location(container_uuid)
     Process.link(container_pid)

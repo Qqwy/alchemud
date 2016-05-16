@@ -40,11 +40,11 @@ defmodule Alchemud.World.LocationManager do
   """
   defp load_from_persistent_storage do
     [
-      %Location{module: Alchemud.World.Location.Forest, name: "foo", uuid: "forest1", description: "foobar", ways: [
+      %Location{module: Alchemud.World.Location.Forest, name: "The small forest path", uuid: "forest1", description: "foobar", ways: [
         %{entrance_uuid: "forest2", name: "south"}
         ], exits: []
       },
-      %Location{module: Alchemud.World.Location.Forest, name: "bar", uuid: "forest2", description: "barfoo", ways: [
+      %Location{module: Alchemud.World.Location.Forest, name: "a muddy pond", uuid: "forest2", description: "barfoo", ways: [
         %{entrance_uuid: "forest1", name: "north"},
         %{entrance_uuid: "forest1", name: "south"}
         #,%{entrance_uuid: "unexistent", name: "unexistent"}
