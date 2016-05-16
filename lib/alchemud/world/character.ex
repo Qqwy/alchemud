@@ -29,7 +29,7 @@ defmodule Alchemud.World.Character do
   def look_at_location(player = %Player{}) do
     location_pid = Entity.get_location_pid(player.character)
     location_info = Location.get(location_pid)
-    Player.send_message(player, [:red, location_info.name, "\r\n\r\n", :white, location_info.description])
+    Player.send_message(player, [:cyan, :bright, location_info.name, "\r\n\r\n", :white, location_info.description])
   end
 
   def list_exits(player = %Player{}) do
