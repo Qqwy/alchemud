@@ -9,7 +9,7 @@ defmodule Alchemud.Commands.World do
 
   alias Alchemud.World.Character
 
-  def maybe_consume_command(player, "look") do
+  def maybe_consume_command(player, command) when command in ["look", "l"] do
     Character.look_at_location(player)
   end  
 
@@ -17,7 +17,9 @@ defmodule Alchemud.Commands.World do
     Character.list_exits(player)
   end
 
-  def maybe_consume_command(_player, _command) do
-    nil
+  def maybe_consume_command(player, command) do
+    Alchemud.Commands.World.Exits.maybe_consume_command(player, command)
+    || Alchemud.Commands.World.Emote.maybe_consume_command(player, command)
+    || nil
   end
 end

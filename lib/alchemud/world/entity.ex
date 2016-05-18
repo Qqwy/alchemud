@@ -7,10 +7,11 @@ defmodule Alchemud.World.Entity do
   
 
 
-  defstart start(init_state = %Entity{}), gen_server_opts: [name: process_name(init_state)] do
+  defstart start(init_state = %Entity{}, extra_init_data \\ []), gen_server_opts: [name: process_name(init_state)] do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
     init_state
     |> add_to_container
+    |> init_state.module.after_init(extra_init_data)
     |> initial_state
   end
 
@@ -21,9 +22,9 @@ defmodule Alchemud.World.Entity do
   defcall get, state: state, do: reply(state) 
 
 
-  defhandleinfo :tick, state: state = %Entity{module: entity_module} do
+  defhandleinfo :tick, state: state = %Entity{} do
     IO.puts "tick called!"
-    new_state = entity_module.handle_tick(state)
+    new_state = state.module.handle_tick(state)
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
     new_state(new_state)
   end

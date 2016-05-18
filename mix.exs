@@ -46,7 +46,6 @@ defmodule Alchemud.Mixfile do
       {:exrm, "~> 1.0"},                            # Release Manager
 
       {:apex, "~>0.5.0"},                           # Pretty-printing.
-      {:dialyxir, "~> 0.3", only: [:dev]}
 
     ]
   end

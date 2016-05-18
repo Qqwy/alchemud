@@ -32,6 +32,8 @@ defmodule Alchemud.Players.Player do
   def logged_in(player = %Player{}) do
     {:ok, character} = Character.start(player)
     Process.link(character)
-    %Player{player | character: character}
+    player = %Player{player | character: character}
+    Character.look_at_location(player)
+    player
   end
 end

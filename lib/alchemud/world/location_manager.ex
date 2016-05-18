@@ -43,10 +43,14 @@ defmodule Alchemud.World.LocationManager do
       },
       %Location{module: Alchemud.World.Location.Forest, name: "a muddy pond", uuid: "forest2", description: "barfoo", ways: [
         %{entrance_uuid: "forest1", name: "north"},
-        %{entrance_uuid: "forest1", name: "south"}
+        %{entrance_uuid: "forest3", name: "east"}
         #,%{entrance_uuid: "unexistent", name: "unexistent"}
         ], exits: []
-      }
+      },
+      %Location{module: Alchemud.World.Location.Forest, name: "The darker foresty path", uuid: "forest3", description: "foobar3", ways: [
+        %{entrance_uuid: "forest2", name: "west"}
+        ], exits: []
+      },
     ]
   end
 end
