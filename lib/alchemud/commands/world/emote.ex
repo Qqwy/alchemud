@@ -35,14 +35,14 @@ defmodule Alchemud.Commands.World.Emote do
 
 
   def say(player, message) do
-    Player.send_message(player, "You say: #{message}")
+    Player.send_message(player, ~s[You say: "#{message}"])
   end
 
   def exclaim(player, message) do
-    Player.send_message(player, "You exclaim: #{message}")
+    Player.send_message(player, ~s[You exclaim: "#{message}"])
   end
 
   def ask(player, message) do
-    Player.send_message(player, "You ask: #{message}")
+    Player.send_message(player, ~s[You ask: "#{message}"])
   end
 end

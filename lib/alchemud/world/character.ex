@@ -33,8 +33,20 @@ defmodule Alchemud.World.Character do
     location_pid = Entity.get_location_pid(player.character)
     location_info = Location.get(location_pid)
     Player.send_message(player, [:cyan, :bright, location_info.name, "\r\n\r\n", :white, location_info.description])
+
+    list_location_contents(player, location_pid)
+
     list_exits(player)
     Player.send_message(player, "")
+  end
+
+  def list_location_contents(player, location_pid) do
+    character_pid = player.character
+    content_names = Location.get_contents(location_pid)
+    |> Enum.reject(&match?(%Entity{pid: ^character_pid}, &1))
+    |> Enum.map(fn %Entity{name: name} -> name end)
+    |> Enum.join(",")
+    Player.send_message(player, ["The following is/are here: ", :yellow, content_names])
   end
 
   def list_exits(player = %Player{}) do

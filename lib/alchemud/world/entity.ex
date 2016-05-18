@@ -49,7 +49,10 @@ defmodule Alchemud.World.Entity do
   end
 
   defp add_to_container(state = %Entity{container_uuid: container_uuid, container_pid: old_container_pid}) do
-    if old_container_pid, do: Process.unlink(old_container_pid)
+    if old_container_pid do
+      Alchemud.World.Location.remove_entity(old_container_pid, self)
+      Process.unlink(old_container_pid)
+    end
     container_pid = Alchemud.World.LocationManager.whereis_location(container_uuid)
     Process.link(container_pid)
     :ok = Alchemud.World.Location.add_entity(container_pid, self, state)

@@ -27,6 +27,7 @@ defmodule Alchemud.World.Location do
   end
 
   defcall get, state: state, do: reply(state) 
+  defcall get_contents, state: state, do: reply(state.contents) 
 
   @doc """
   Lists all Ways that are exits from this location.
@@ -99,6 +100,11 @@ defmodule Alchemud.World.Location do
 
   # TODO: FIND OUT WHY CATCHALL is necessary here? Why do ways crash and notify the locations using :DOWN
   defhandleinfo _, do: noreply
+
+  defcast remove_entity(pid), state: state do
+    contents = Enum.reject(state.contents, &match?(%Entity{pid: ^pid}, &1))
+    new_state(%Location{state | contents: contents})
+  end
 
   defp add_incoming_ways(%Location{ways: ways, uuid: uuid}) do
     IO.puts "Adding incoming ways"
