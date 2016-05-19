@@ -35,12 +35,12 @@ defmodule Alchemud.World.Entity.Behaviour do
         "#{entity.name} is here"
       end
 
-      def receive_broadcast_from_location(entity, broadcaster, message) do
+      def receive_broadcast(entity, broadcaster, message) do
         # Nothing
         entity
       end
 
-      defoverridable after_init: 2, handle_tick: 1, glance_description: 1, receive_broadcast_from_location: 3
+      defoverridable after_init: 2, handle_tick: 1, glance_description: 1, receive_broadcast: 3
     end
   end
 end

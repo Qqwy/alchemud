@@ -12,7 +12,7 @@ defmodule Alchemud.Commands.World.Emote do
   alias Alchemud.World.Way
 
   def maybe_consume_command(player, "me " <> emote) do
-    Character.broadcast(player, "* #{player.name} #{emote}")
+    Character.broadcast_from(player, "* #{player.name} #{emote}")
     Player.send_message(player, "* #{player.name} #{emote}")
   end
 

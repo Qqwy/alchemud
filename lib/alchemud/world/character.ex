@@ -17,7 +17,7 @@ defmodule Alchemud.World.Character do
     entity_state_map
   end
 
-  def receive_broadcast_from_location(character, broadcaster, message) do
+  def receive_broadcast(character, broadcaster, message) do
     # Nothing
     IO.puts "[#{inspect character}] RECEIVED BROADCAST: #{inspect message}"
     Player.send_message(character.state.player, message)
@@ -78,6 +78,10 @@ defmodule Alchemud.World.Character do
     player.character
     |> Entity.get_location_pid
     |> Location.exits
+  end
+
+  def broadcast_from(player, message) do
+    Entity.broadcast_from(player.character, message)
   end
 
   def broadcast(player, message) do

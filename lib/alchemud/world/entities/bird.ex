@@ -10,7 +10,7 @@ defmodule Alchemud.World.Entity.Bird do
     #IO.puts "IM BIRD #{name} AND I CANNOT LIE! I exist in: #{Alchemud.World.Entity.location_info(entity).name}"
     #IO.inspect(["diff:", entity.state.timestamp_of_last_action, DateTime.now ])
     if Timex.diff(entity.state.timestamp_of_last_action, DateTime.now, :seconds) > entity.state.next_action_timeout do
-      Entity.broadcast(entity.pid, "The #{entity.name} hops around in the bushes.")
+      Entity.broadcast_from(entity.pid, "The #{entity.name} hops around in the bushes.")
       %Entity{entity | state: set_next_action_timeout(entity.state)}
     else
       entity

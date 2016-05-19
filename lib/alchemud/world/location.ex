@@ -67,14 +67,25 @@ defmodule Alchemud.World.Location do
   end
 
   @doc """
-  Broadcasts a message to all other entities in this location.
+  Broadcasts a message to all entities (including the broadcaster) in this location.
   `broadcaster` should be the PID of the sender.
   `message` should be an iodata message.
   """
   defcast broadcast(broadcaster, message), state: location do
     location.contents
+    |> Enum.each(fn entity -> Entity.receive_broadcast(entity.pid, broadcaster, message) end)
+    noreply
+  end
+
+  @doc """
+  Broadcasts a message to all other entities in this location.
+  `broadcaster` should be the PID of the sender.
+  `message` should be an iodata message.
+  """
+  defcast broadcast_from(broadcaster, message), state: location do
+    location.contents
     |> Enum.reject(&match?(%Entity{pid: ^broadcaster}, &1))
-    |> Enum.each(fn entity -> Entity.receive_broadcast_from_location(entity.pid, broadcaster, message) end)
+    |> Enum.each(fn entity -> Entity.receive_broadcast(entity.pid, broadcaster, message) end)
     noreply
   end
 

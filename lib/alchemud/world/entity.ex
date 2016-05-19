@@ -55,9 +55,12 @@ defmodule Alchemud.World.Entity do
     set_and_reply(entity, entity.container_pid)
   end
 
-  defcast receive_broadcast_from_location(broadcaster, message), state: entity do
+  @doc """
+  Called by Location when a broadcast is received.
+  """
+  defcast receive_broadcast(broadcaster, message), state: entity do
     Logger.debug "[#{inspect entity}] received broadcast: #{inspect message} from #{inspect broadcaster}"
-    entity = entity.module.receive_broadcast_from_location(entity, broadcaster, message)
+    entity = entity.module.receive_broadcast(entity, broadcaster, message)
     new_state(entity)
   end
 
@@ -65,9 +68,21 @@ defmodule Alchemud.World.Entity do
     entity.container_pid |> Alchemud.World.Location.get
   end
 
+  @doc """
+  Broadcasts a message to everything in the current room, *including* itself.
+  """
   defcast broadcast(message), state: entity do
     entity.container_pid 
     |> Alchemud.World.Location.broadcast(self, message)
+    noreply
+  end
+
+  @doc """
+  Broadcasts a message to everything in the current room, *excluding* itself.
+  """
+  defcast broadcast_from(message), state: entity do
+    entity.container_pid 
+    |> Alchemud.World.Location.broadcast_from(self, message)
     noreply
   end
 
