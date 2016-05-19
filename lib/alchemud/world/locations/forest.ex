@@ -2,7 +2,7 @@ defmodule Alchemud.World.Location.Forest do
   use Alchemud.World.Location.Behaviour
 
   def handle_tick(location = %{name: name}) do 
-    Location.broadcast(location.pid, [:font_1, "The trees swing softly in the breeze."])
+    #Location.broadcast(location.pid, [:font_1, "The trees swing softly in the breeze."])
     location
   end
 

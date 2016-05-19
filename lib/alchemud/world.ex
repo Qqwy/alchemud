@@ -7,7 +7,7 @@ defmodule Alchemud.World do
 
   use ExActor.GenServer
 
-  @tick_interval 10000
+  @tick_interval 100
 
   def tick_interval, do: @tick_interval
 

@@ -24,7 +24,7 @@ defmodule Alchemud.World.Entity do
 
 
   defhandleinfo :tick, state: entity = %Entity{} do
-    IO.puts "tick called!"
+    #IO.puts "tick called!"
     new_state = entity.module.handle_tick(entity)
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
     new_state(new_state)

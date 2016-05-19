@@ -21,7 +21,8 @@ defmodule Alchemud.Mixfile do
         :comeonin,
         :apex,
         :fsm,
-        :exactor
+        :exactor,
+        :timex
       ],
       mod: {Alchemud, []}
     ]
@@ -44,6 +45,7 @@ defmodule Alchemud.Mixfile do
       {:ranch, "~> 1.1"},                           # Pooled TCP-server connections.
       {:comeonin, "~> 2.4"},                        # BCrypt password hashing
       {:exrm, "~> 1.0"},                            # Release Manager
+      {:timex, "~> 2.1"},
 
       {:apex, "~>0.5.0"},                           # Pretty-printing.
 
