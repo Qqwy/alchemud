@@ -27,6 +27,13 @@ defmodule Alchemud.World.Location do
   end
 
   defcall get, state: state, do: reply(state) 
+
+  defcall get_description, state: state do 
+    state
+    |> state.module.location_description
+    |> reply
+  end
+  
   defcall get_contents, state: state, do: reply(state.contents) 
 
   @doc """

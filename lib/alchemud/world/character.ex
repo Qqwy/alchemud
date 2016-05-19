@@ -4,7 +4,7 @@ defmodule Alchemud.World.Character do
   alias Alchemud.World.Location
   alias Alchemud.World.Way
 
-  @behaviour Alchemud.World.Entity.Behaviour
+  use Alchemud.World.Entity.Behaviour
 
 
   def handle_tick(entity_state_map) do
@@ -30,8 +30,9 @@ defmodule Alchemud.World.Character do
 
   def look_at_location(player = %Player{}) do
     location_pid = Entity.get_location_pid(player.character)
-    location_info = Location.get(location_pid)
-    Player.send_message(player, [:cyan, :bright, location_info.name, "\r\n", :white, :normal, location_info.description])
+    #location_info = Location.get(location_pid)
+    #Player.send_message(player, [:cyan, :bright, location_info.name, "\r\n", :white, :normal, location_info.description])
+    Player.send_message(player, Location.get_description(location_pid))
 
     list_location_contents(player, location_pid)
 
