@@ -9,6 +9,7 @@ defmodule Alchemud.World.Entity.Behaviour do
 
   defmacro __using__(opts) do
     quote do
+      alias Alchemud.World.Entity
       require Alchemud.World.Entity.Behaviour
       @behaviour Alchemud.World.Entity.Behaviour
 
@@ -26,7 +27,12 @@ defmodule Alchemud.World.Entity.Behaviour do
         "#{entity.name} is here"
       end
 
-      defoverridable after_init: 2, handle_tick: 1, glance_description: 1
+      def receive_broadcast_from_location(entity, broadcaster, message) do
+        # Nothing
+        entity
+      end
+
+      defoverridable after_init: 2, handle_tick: 1, glance_description: 1, receive_broadcast_from_location: 3
     end
   end
 end

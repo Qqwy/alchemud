@@ -4,6 +4,7 @@ defmodule Alchemud.Commands.World.Emote do
   alias Alchemud.World.Way
 
   def maybe_consume_command(player, "me "<> emote) do
+    Character.broadcast(player, "* #{player.name} #{emote}")
     Player.send_message(player, "* #{player.name} #{emote}")
   end
 
@@ -35,14 +36,17 @@ defmodule Alchemud.Commands.World.Emote do
 
 
   def say(player, message) do
+    Character.broadcast(player, ~s[#{player.name} says: "#{message}"])
     Player.send_message(player, ~s[You say: "#{message}"])
   end
 
   def exclaim(player, message) do
+    Character.broadcast(player, ~s[#{player.name} exclaims: "#{message}"])
     Player.send_message(player, ~s[You exclaim: "#{message}"])
   end
 
   def ask(player, message) do
+    Character.broadcast(player, ~s[#{player.name} asks: "#{message}"])
     Player.send_message(player, ~s[You ask: "#{message}"])
   end
 end

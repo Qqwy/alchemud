@@ -15,6 +15,7 @@ defmodule Alchemud.World.Location do
 
 
   defstart start_link(location = %Location{}), gen_server_opts: [name: process_name(location)] do
+    location = %Location{location | pid: self}
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
     Process.flag(:trap_exit, true) # Trap Entity exits.
 
@@ -61,6 +62,25 @@ defmodule Alchemud.World.Location do
     Process.link(entity_pid)
     location = %Location{location | contents: [%Entity{entity | pid: entity_pid} | location.contents]}
     set_and_reply(location, :ok)
+  end
+
+  @doc """
+  Broadcasts a message to all other entities in this location.
+  `broadcaster` should be the PID of the sender.
+  `message` should be an iodata message.
+  """
+  defcast broadcast(broadcaster, message), state: location do
+    location.contents
+    |> Enum.reject(&match?(%Entity{pid: ^broadcaster}, &1))
+    |> Enum.each(fn entity -> Entity.receive_broadcast_from_location(entity.pid, broadcaster, message) end)
+    noreply
+  end
+
+  @doc """
+  Shorthand for a location itself broadcasting something.
+  """
+  def broadcast(pid, message) do
+    Location.broadcast(pid, pid, message)
   end
 
   @doc """

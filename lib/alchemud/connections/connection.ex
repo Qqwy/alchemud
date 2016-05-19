@@ -45,7 +45,7 @@ defmodule Alchemud.Connections.Connection do
   alias Alchemud.Connections.Connection.ConnectionState
   alias Alchemud.Connections.Gatekeeper
 
-  @prompt IO.ANSI.format([:green, :bright, "~> ", :normal])
+  @prompt IO.ANSI.format([:green, :bright, "", :normal])
 
   @doc """
   To be called from a Connection Handler process.

@@ -9,6 +9,7 @@ defmodule Alchemud.World.Entity do
 
   defstart start(init_state = %Entity{}, extra_init_data \\ []), gen_server_opts: [name: process_name(init_state)] do
     Process.send_after(self, :tick, Alchemud.World.tick_interval)
+    init_state = %Entity{init_state | pid: self}
     init_state
     |> add_to_container
     |> init_state.module.after_init(extra_init_data)
@@ -44,8 +45,20 @@ defmodule Alchemud.World.Entity do
     set_and_reply(entity, entity.container_pid)
   end
 
+  defcast receive_broadcast_from_location(broadcaster, message), state: entity do
+    IO.inspect "[#{inspect entity}] received broadcast: #{inspect message} from #{inspect broadcaster}"
+    entity = entity.module.receive_broadcast_from_location(entity, broadcaster, message)
+    new_state(entity)
+  end
+
   def location_info(entity = %Entity{}) do
     entity.container_pid |> Alchemud.World.Location.get
+  end
+
+  defcast broadcast(message), state: entity do
+    entity.container_pid 
+    |> Alchemud.World.Location.broadcast(self, message)
+    noreply
   end
 
   defp add_to_container(entity = %Entity{container_uuid: container_uuid, container_pid: old_container_pid}) do

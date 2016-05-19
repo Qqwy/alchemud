@@ -16,6 +16,7 @@ defmodule Alchemud.World.Location.Behaviour do
 
   defmacro __using__(opts) do
     quote do
+      alias Alchemud.World.Location
       require Alchemud.World.Location.Behaviour
       @behaviour Alchemud.World.Location.Behaviour
 
@@ -30,10 +31,14 @@ defmodule Alchemud.World.Location.Behaviour do
       end
 
       def location_description(location) do
-        [:cyan, :bright, location.name, "\r\n", :white, :normal, location.description]
+        [:cyan, :bright, location.name, [:white, :normal, " (", location_category_name(location) ,")"], "\r\n", :white, :normal, location.description]
       end
 
-      defoverridable after_init: 2, handle_tick: 1, location_description: 1
+      def location_category_name(location) do
+        "outdoors"
+      end
+
+      defoverridable after_init: 2, handle_tick: 1, location_description: 1, location_category_name: 1
     end
   end
 end

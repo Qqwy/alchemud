@@ -8,8 +8,14 @@ defmodule Alchemud.World.Character do
 
 
   def handle_tick(entity_state_map) do
-    IO.puts "I AM HERE"
     entity_state_map
+  end
+
+  def receive_broadcast_from_location(character, broadcaster, message) do
+    # Nothing
+    IO.puts "[#{inspect character}] RECEIVED BROADCAST: #{inspect message}"
+    Player.send_message(character.state.player, message)
+    character
   end
 
   def start(player) do
@@ -19,7 +25,7 @@ defmodule Alchemud.World.Character do
   end
 
   def after_init(character_data, player) do
-    character_data
+    %Entity{character_data | state: %{player: player}}
   end
 
   def load_character_info(player = %Player{}) do
@@ -46,7 +52,7 @@ defmodule Alchemud.World.Character do
     |> Enum.reject(&match?(%Entity{pid: ^character_pid}, &1))
     |> Enum.map(fn %Entity{name: name} -> name end)
     if length(content_names) > 0 do
-      Player.send_message(player, ["The following is/are here: ", :yellow, content_names])
+      Player.send_message(player, ["The following is/are here: ", :yellow, Alchemud.Humanize.enum(content_names)])
     end
   end
 
@@ -65,10 +71,16 @@ defmodule Alchemud.World.Character do
     |> Location.exits
   end
 
+  def broadcast(player, message) do
+    Entity.broadcast(player.character, message)
+  end
+
   def move_across_exit(player = %Player{}, way = %Way{}) do
     # TODO: Messages to others.
     Player.send_message(player, "You move #{way.name}. \r\n")
+    broadcast(player, "#{player.name} leaves, going #{way.name}. \r\n")
     Entity.move_to(player.character, way.exit)
+    broadcast(player, "#{player.name} arrives from the inverse of #{way.name}. \r\n")
     look_at_location(player)
   end
 
