@@ -49,7 +49,7 @@ defmodule Alchemud.World.Way do
     noreply
   end
 
-  defhandleinfo {:DOWN, _ref, :process, _pid, _reason}, state: state do
+  defhandleinfo {:DOWN, _ref, :process, pid, _reason}, state: state do
     if pid == entrance_pid(state) do
       Process.send_after(self, :ping_entrance, @exit_check_interval)
     end

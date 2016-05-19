@@ -16,16 +16,8 @@ defmodule Alchemud.Commands.World.Emote do
   end
 
   def maybe_consume_command(player, "say " <> message) do
-    cond do
-      String.ends_with?(message, "!") ->
-        exclaim(player, message)
-      String.ends_with?(message, "?") ->
-        ask(player, message)
-      true ->
-        say(player, message)
-        
-    end
-   
+    say(String.last(message), player, String.strip(message))
+    true
   end
 
   def maybe_consume_command(player, "\"" <> message) do
@@ -36,23 +28,33 @@ defmodule Alchemud.Commands.World.Emote do
     maybe_consume_command(player, "say " <> String.replace_suffix(message, "\'", ""))
   end
 
+  def maybe_consume_command(player, "yell" <> message) do
+    yell(player, String.strip(message))
+    true
+  end
+
   def maybe_consume_command(_, _) do
     nil
   end
 
-
-  def say(player, message) do
-    Character.broadcast(player, ~s[#{player.name} says: "#{message}"])
-    Player.send_message(player, ~s[You say: "#{message}"])
-  end
-
-  def exclaim(player, message) do
+  defp say("!", player, message) do
     Character.broadcast(player, ~s[#{player.name} exclaims: "#{message}"])
     Player.send_message(player, ~s[You exclaim: "#{message}"])
   end
 
-  def ask(player, message) do
+  defp say("?", player, message) do
     Character.broadcast(player, ~s[#{player.name} asks: "#{message}"])
     Player.send_message(player, ~s[You ask: "#{message}"])
+  end
+
+  defp say(_, player, message) do
+    Character.broadcast(player, ~s[#{player.name} says: "#{message}"])
+    Player.send_message(player, ~s[You say: "#{message}"])
+  end
+
+  defp yell(player, message) do
+    message = String.upcase(message)
+    Character.broadcast(player, ~s[#{player.name} yells: "#{message}!"])
+    Player.send_message(player, ~s[You yell: "#{message}!"])
   end
 end

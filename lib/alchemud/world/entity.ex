@@ -9,6 +9,8 @@ defmodule Alchemud.World.Entity do
 
   use ExActor.GenServer
 
+  require Logger
+
 
   defstruct module: nil, uuid: nil, container_uuid: nil, container_pid: nil, name: "", description: "", state: nil, pid: nil
   alias Alchemud.World.Entity

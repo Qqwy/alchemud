@@ -11,7 +11,7 @@ defmodule Alchemud.World.Location do
 
   use ExActor.GenServer
 
-  use Logger
+  require Logger
 
   alias Alchemud.World.{Way, Entity}
 

@@ -2,7 +2,7 @@ defmodule Alchemud.Commands do
   @moduledoc """
   Handles command parsing (binary strings that players send to influence the world)
   """
-  use Logger
+  require Logger
 
   alias Alchemud.Commands.{Service, Universal, World}
   alias Alchemud.Players.Player
