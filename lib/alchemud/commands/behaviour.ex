@@ -3,7 +3,6 @@ defmodule Alchemud.Commands.Behaviour do
   Anything that can consume commands should adhere to this Behaviour.
   """
 
-  # TODO: Find out what to actually pass here as player, instead of a `socket`.
   @type player :: %Alchemud.Players.Player{}
   @type command :: binary
 

@@ -54,7 +54,8 @@ defmodule Alchemud.World.Character do
 
   def list_location_contents(player, location_pid) do
     character_pid = player.character
-    content_names = Location.get_contents(location_pid)
+    content_names = location_pid
+    |> Location.get_contents
     |> Enum.reject(&match?(%Entity{pid: ^character_pid}, &1))
     |> Enum.map(fn %Entity{name: name} -> name end)
     if length(content_names) > 0 do
@@ -63,7 +64,8 @@ defmodule Alchemud.World.Character do
   end
 
   def list_exits(player = %Player{}) do
-    exit_names = exits(player)
+    exit_names = player
+    |> exits
     |> Enum.map(fn %Way{name: name} -> 
       name 
       |> Alchemud.Humanize.underline 
@@ -73,7 +75,8 @@ defmodule Alchemud.World.Character do
   end
 
   def exits(player = %Player{}) do
-    Entity.get_location_pid(player.character)
+    player.character
+    |> Entity.get_location_pid
     |> Location.exits
   end
 
@@ -82,7 +85,6 @@ defmodule Alchemud.World.Character do
   end
 
   def move_across_exit(player = %Player{}, way = %Way{}) do
-    # TODO: Messages to others.
     Player.send_message(player, "You move #{way.name}. \r\n")
     broadcast(player, "#{player.name} leaves, going #{way.name}. \r\n")
     Entity.move_to(player.character, way.exit)

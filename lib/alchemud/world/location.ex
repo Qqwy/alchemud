@@ -11,6 +11,8 @@ defmodule Alchemud.World.Location do
 
   use ExActor.GenServer
 
+  use Logger
+
   alias Alchemud.World.{Way, Entity}
 
 
@@ -97,12 +99,12 @@ defmodule Alchemud.World.Location do
   - Removes entities that are down from the `contents` list.
   """
   defhandleinfo {:DOWN, ref, :process, pid, reason}, state: location do
-    IO.inspect "[#{inspect self}]:DOWN message received:"
+    Logger.debug "[#{inspect self}]:DOWN message received:"
     Apex.ap [ref, pid, reason]
 
     # Filter exits
-    exits = Enum.reject(location.exits, &match?(%Way{pid: ^pid}, &1) )
-    # TODO: Filter contents?
+    exits = Enum.reject(location.exits, &match?(%Way{pid: ^pid}, &1))
+    # Filter contents
     contents = Enum.reject(location.contents, &match?(%Entity{pid: ^pid}, &1))
 
     new_state(%Location{location | exits: exits, contents: contents})
@@ -112,7 +114,7 @@ defmodule Alchemud.World.Location do
   Called when a character exits.
   """
   defhandleinfo {:EXIT, pid, reason}, state: location do
-    IO.inspect "Trapped exit from #{inspect pid}, reason: #{inspect reason}"
+    Logger.debug "Trapped exit from #{inspect pid}, reason: #{inspect reason}"
     contents = Enum.reject(location.contents, &match?(%Entity{pid: ^pid}, &1))
     new_state(%Location{location | contents: contents})
   end
@@ -127,7 +129,7 @@ defmodule Alchemud.World.Location do
 
   defp add_incoming_ways(%Location{ways: ways, uuid: uuid}) do
     for %{entrance_uuid: entrance_uuid, name: name} <- ways do
-      Alchemud.World.Way.start_link(%Way{entrance: entrance_uuid, exit: uuid, name: name })
+      Alchemud.World.Way.start_link(%Way{entrance: entrance_uuid, exit: uuid, name: name})
     end
   end
 end

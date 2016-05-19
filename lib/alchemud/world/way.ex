@@ -39,26 +39,26 @@ defmodule Alchemud.World.Way do
   defcall get, state: state, do: reply(state) 
   defcall get_exit, state: state = %Way{} , do: reply(state.exit_location) 
 
-  # TODO: Add logic to re-call ping_entrance once entrance location is down (Monitor it!).
   defhandleinfo :ping_entrance, state: state = %Way{} do
-    entrance_pid = entrance_pid(state)
-    case entrance_pid do
+    entrance = entrance_pid(state)
+    case entrance do
       nil -> Process.send_after(self, :ping_entrance, @exit_check_interval)
-      _   -> add_as_exit_to_entrance_location(entrance_pid, state)
+      _   -> add_as_exit_to_entrance_location(entrance, state)
     end
     
     noreply
   end
 
-  # TODO: make pattern-match only for the monitored entrance process.
-  defhandleinfo {:DOWN, _ref, :process, _pid, _reason} do
-    Process.send_after(self, :ping_entrance, @exit_check_interval)
+  defhandleinfo {:DOWN, _ref, :process, _pid, _reason}, state: state do
+    if pid == entrance_pid(state) do
+      Process.send_after(self, :ping_entrance, @exit_check_interval)
+    end
     noreply
   end
 
-  defp add_as_exit_to_entrance_location(entrance_pid, state = %Way{}) when is_pid(entrance_pid) do
-    Process.monitor(entrance_pid)
-    :ok = Alchemud.World.Location.add_exit(entrance_pid, self, state)
+  defp add_as_exit_to_entrance_location(entrance, state = %Way{}) when is_pid(entrance) do
+    Process.monitor(entrance)
+    :ok = Alchemud.World.Location.add_exit(entrance, self, state)
   end
 
   defp entrance_pid(%Way{entrance: entrance_uuid}) do

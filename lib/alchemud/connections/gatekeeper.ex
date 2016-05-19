@@ -38,7 +38,7 @@
 
     defstate idle do
       defevent auth(connection, name), data: player = %Player{} do
-        # TODO: Name validation. (no spaces, auto-capitalize, etc) -> extra error path.
+        # IN THE FUTURE: Name validation. (no spaces, auto-capitalize, etc) -> extra error path.
         name = sanitize_name(name)
         existing_player = find_player_by_name(name)
         if existing_player do

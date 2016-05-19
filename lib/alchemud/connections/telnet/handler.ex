@@ -63,7 +63,7 @@ defmodule Alchemud.Connections.Telnet.Handler do
   Pass newline: false to not have the message automatically end with a newline.
   """
   def send_message(%Connection.Telnet{socket: socket, transport: transport}, message) do
-    message = IO.ANSI.format(message) |> IO.chardata_to_string
+    message = message |> IO.ANSI.format |> IO.chardata_to_string
     transport.send(socket, message)
     true
   end

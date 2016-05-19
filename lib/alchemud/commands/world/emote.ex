@@ -10,13 +10,12 @@ defmodule Alchemud.Commands.World.Emote do
   alias Alchemud.Players.Player
   alias Alchemud.World.Way
 
-  def maybe_consume_command(player, "me "<> emote) do
+  def maybe_consume_command(player, "me " <> emote) do
     Character.broadcast(player, "* #{player.name} #{emote}")
     Player.send_message(player, "* #{player.name} #{emote}")
   end
 
-  def maybe_consume_command(player, "say "<> message) do
-    # TODO: Message to others
+  def maybe_consume_command(player, "say " <> message) do
     cond do
       String.ends_with?(message, "!") ->
         exclaim(player, message)
@@ -30,11 +29,11 @@ defmodule Alchemud.Commands.World.Emote do
   end
 
   def maybe_consume_command(player, "\"" <> message) do
-    maybe_consume_command(player, "say "<> String.replace_suffix(message, "\"", ""))
+    maybe_consume_command(player, "say " <> String.replace_suffix(message, "\"", ""))
   end
 
   def maybe_consume_command(player, "\'" <> message) do
-    maybe_consume_command(player, "say "<> String.replace_suffix(message, "\'", ""))
+    maybe_consume_command(player, "say " <> String.replace_suffix(message, "\'", ""))
   end
 
   def maybe_consume_command(_, _) do

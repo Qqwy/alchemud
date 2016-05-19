@@ -44,7 +44,7 @@ defmodule Alchemud.World.Entity do
   end
 
   defcall get_location_pid, state: entity do
-    # TODO: keep containers in mind
+    # IN THE FUTURE: keep containers in mind
     reply(entity.container_pid)
   end
 
@@ -54,7 +54,7 @@ defmodule Alchemud.World.Entity do
   end
 
   defcast receive_broadcast_from_location(broadcaster, message), state: entity do
-    IO.inspect "[#{inspect entity}] received broadcast: #{inspect message} from #{inspect broadcaster}"
+    Logger.debug "[#{inspect entity}] received broadcast: #{inspect message} from #{inspect broadcaster}"
     entity = entity.module.receive_broadcast_from_location(entity, broadcaster, message)
     new_state(entity)
   end

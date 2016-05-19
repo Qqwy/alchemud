@@ -71,7 +71,6 @@ defmodule Alchemud.Connections.Connection do
     send_welcome_message(conn_state)
     Gatekeeper.send_greeting(conn_state)
     send_prompt(conn_state)
-    # TODO: Gatekeeper
     initial_state(conn_state)
   end
 

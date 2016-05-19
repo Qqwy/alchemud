@@ -23,7 +23,7 @@ defmodule Alchemud.World.Entity.Bird do
     end
 
     def set_next_action_timeout(state) do
-      timeout = 3..20 |>Enum.random
-      %{state | timestamp_of_last_action: DateTime.now, next_action_timeout: timeout  }
+      timeout = 3..20 |> Enum.random
+      %{state | timestamp_of_last_action: DateTime.now, next_action_timeout: timeout}
     end
 end
