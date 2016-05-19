@@ -88,9 +88,14 @@ defmodule Alchemud.Connections.Connection do
     input = prettify_input(input)
     case Gatekeeper.auth(gatekeeper, conn_state, input) do
       {player = %Player{}, gatekeeper = %Gatekeeper{}} -> # Logged in
-        send_prompt(conn_state)
-        player = Alchemud.Players.Player.logged_in(%Player{player | connection: conn_state})
-        new_state(%ConnectionState{conn_state | gatekeeper: gatekeeper, player: player})
+        if !ensure_first_player_session(player) do
+          send_message(conn_state, "You seem to already be logged in elsewhere. Disconnecting...")
+          close(conn_state)
+        else
+          send_prompt(conn_state)
+          player = Alchemud.Players.Player.logged_in(%Player{player | connection: conn_state})
+          new_state(%ConnectionState{conn_state | gatekeeper: gatekeeper, player: player})
+        end
       gatekeeper = %Gatekeeper{} -> # Still in gatekeeperland
         send_prompt(conn_state)
         new_state(%ConnectionState{conn_state | gatekeeper: gatekeeper})
@@ -106,6 +111,10 @@ defmodule Alchemud.Connections.Connection do
   def prettify_input(input) do
     input
     |> String.strip
+  end
+
+  defp ensure_first_player_session(player) do
+    !Alchemud.World.EntityManager.whereis_entity(player.name)
   end
 
   @doc """

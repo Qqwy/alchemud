@@ -19,6 +19,7 @@ defmodule Alchemud.Commands.World do
 
   def maybe_consume_command(player, command) do
     Alchemud.Commands.World.Exits.maybe_consume_command(player, command)
+    || Alchemud.Commands.World.Verbal.maybe_consume_command(player, command)
     || Alchemud.Commands.World.Emote.maybe_consume_command(player, command)
     || nil
   end

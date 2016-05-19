@@ -4,6 +4,7 @@ defmodule Alchemud.Commands.World.Exits do
 
   If a known exit name is used that is not an exit of the current room, an error message is print.
   """
+  @behaviour Alchemud.Commands.Behaviour
 
   alias Alchemud.World.Character
   alias Alchemud.Players.Player
