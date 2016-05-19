@@ -55,7 +55,6 @@ defmodule Alchemud.Connections.Connection do
 
     send_welcome_message(conn_state)
     Gatekeeper.send_greeting(conn_state)
-    IO.inspect(conn_state)
     send_prompt(conn_state)
     # TODO: Gatekeeper
     initial_state(conn_state)
@@ -73,7 +72,7 @@ defmodule Alchemud.Connections.Connection do
   # We are still authenticating. Gatekeeper handles control flow here.
   defcast input_received(input), state: conn_state = %ConnectionState{gatekeeper: gatekeeper} do
     input = prettify_input(input)
-    case IO.inspect Gatekeeper.auth(gatekeeper, conn_state, input) do
+    case Gatekeeper.auth(gatekeeper, conn_state, input) do
       {player = %Player{}, gatekeeper = %Gatekeeper{}} -> # Logged in
         send_prompt(conn_state)
         player = Alchemud.Players.Player.logged_in(%Player{player | connection: conn_state})

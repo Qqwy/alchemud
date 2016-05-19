@@ -37,17 +37,17 @@ defmodule Alchemud.World.LocationManager do
   # STUB
   defp load_from_persistent_storage do
     [
-      %Location{module: Alchemud.World.Location.Forest, name: "The small forest path", uuid: "forest1", description: "foobar", ways: [
+      %Location{module: Alchemud.World.Location.Forest, name: "The small forest path", uuid: "forest1", description: "This small path in the forest, frequented by animals.\r\nIt stops in the bushes at the north, but is clearly defined to the south.\r\nSmall bushes hang overhead.", ways: [
         %{entrance_uuid: "forest2", name: "south"}
         ], exits: []
       },
-      %Location{module: Alchemud.World.Location.Forest, name: "a muddy pond", uuid: "forest2", description: "barfoo", ways: [
+      %Location{module: Alchemud.World.Location.Forest, name: "A muddy pond", uuid: "forest2", description: "At the side of the path, that curves from north to east here,\r\nis a small dark and muddy pond.\r\nIt is mostly dried out right now.", ways: [
         %{entrance_uuid: "forest1", name: "north"},
         %{entrance_uuid: "forest3", name: "east"}
         #,%{entrance_uuid: "unexistent", name: "unexistent"}
         ], exits: []
       },
-      %Location{module: Alchemud.World.Location.Forest, name: "The darker foresty path", uuid: "forest3", description: "foobar3", ways: [
+      %Location{module: Alchemud.World.Location.Forest, name: "The darker foresty path", uuid: "forest3", description: "The trees alongside the path are a lot taller here.\r\nTo the west, you can see the path make a small curve.\r\nIn all other directions, the path seems to have stopped.", ways: [
         %{entrance_uuid: "forest2", name: "west"}
         ], exits: []
       },

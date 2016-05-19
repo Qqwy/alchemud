@@ -40,10 +40,6 @@ defmodule Alchemud.World.Location do
   TODO: Find out if storing Way's PID is better than storing its UUID.
   """
   defcall add_exit(way_pid, way = %Way{}), state: state = %Location{exits: exits} do
-    IO.puts "Adding exit:"
-    Apex.ap way_pid
-    Apex.ap way
-    Apex.ap state
     Process.monitor(way_pid)
     new_state = %Location{state | exits: [%Way{way | pid: way_pid} | exits]}
     set_and_reply(new_state, :ok)
@@ -55,12 +51,8 @@ defmodule Alchemud.World.Location do
   As the state of the entity might (rapidly!) change, this state is not sent over.
   """
   defcall add_entity(entity_pid, entity = %Entity{}), state: state = %Location{contents: contents} do
-    IO.puts "Adding entity:"
-    Apex.ap entity_pid
-    Apex.ap entity
     Process.link(entity_pid)
     new_state = %Location{state | contents: [%Entity{entity | pid: entity_pid} | contents]}
-    Apex.ap new_state
     set_and_reply(new_state, :ok)
   end
 
@@ -107,8 +99,6 @@ defmodule Alchemud.World.Location do
   end
 
   defp add_incoming_ways(%Location{ways: ways, uuid: uuid}) do
-    IO.puts "Adding incoming ways"
-    Apex.ap ways
     for %{entrance_uuid: entrance_uuid, name: name} <- ways do
       Alchemud.World.Way.start_link(%Way{entrance: entrance_uuid, exit: uuid, name: name })
     end

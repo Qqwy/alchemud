@@ -8,7 +8,6 @@ defmodule Alchemud.World.Way do
   use ExActor.GenServer
 
   defstart start_link(init_state = %Way{}), gen_server_opts: [name: process_name(init_state)] do
-    IO.inspect init_state
     send(self, :ping_entrance)
     initial_state(init_state)
   end
@@ -22,7 +21,6 @@ defmodule Alchemud.World.Way do
 
   # TODO: Add logic to re-call ping_entrance once entrance location is down (Monitor it!).
   defhandleinfo :ping_entrance, state: state = %Way{} do
-    IO.inspect "[#{inspect self}] Pinging entrance..."
     entrance_pid = entrance_pid(state)
     case entrance_pid do
       nil -> Process.send_after(self, :ping_entrance, @exit_check_interval)
@@ -44,7 +42,6 @@ defmodule Alchemud.World.Way do
   end
 
   defp entrance_pid(%Way{entrance: entrance_uuid}) do
-    IO.inspect "entrance: #{inspect entrance_uuid}"
     Alchemud.World.LocationManager.whereis_location(entrance_uuid)
   end
 

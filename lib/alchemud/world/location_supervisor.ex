@@ -14,7 +14,6 @@ defmodule Alchemud.World.LocationSupervisor do
   end
 
   def start_child(args) do
-    IO.inspect args
     Supervisor.start_child(__MODULE__, [args])
   end
 end

@@ -13,7 +13,7 @@ defmodule Alchemud.Commands.World do
     Character.look_at_location(player)
   end  
 
-  def maybe_consume_command(player, "exits") do
+  def maybe_consume_command(player, command) when command in ["exits", "x"] do
     Character.list_exits(player)
   end
 

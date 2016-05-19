@@ -26,13 +26,12 @@ defmodule Alchemud.World.Character do
     # TODO: Load from some kind of persistence.
     
     %Entity{module: __MODULE__, name: player.name, description: "THIS IS A Character :D", container_uuid: "forest1", uuid: player.name}
-    |> Apex.ap
   end
 
   def look_at_location(player = %Player{}) do
     location_pid = Entity.get_location_pid(player.character)
     location_info = Location.get(location_pid)
-    Player.send_message(player, [:cyan, :bright, location_info.name, "\r\n\r\n", :white, location_info.description])
+    Player.send_message(player, [:cyan, :bright, location_info.name, "\r\n", :white, :normal, location_info.description])
 
     list_location_contents(player, location_pid)
 
@@ -45,15 +44,19 @@ defmodule Alchemud.World.Character do
     content_names = Location.get_contents(location_pid)
     |> Enum.reject(&match?(%Entity{pid: ^character_pid}, &1))
     |> Enum.map(fn %Entity{name: name} -> name end)
-    |> Enum.join(",")
-    Player.send_message(player, ["The following is/are here: ", :yellow, content_names])
+    if length(content_names) > 0 do
+      Player.send_message(player, ["The following is/are here: ", :yellow, content_names])
+    end
   end
 
   def list_exits(player = %Player{}) do
     exit_names = exits(player)
-    |> Enum.map(fn %Way{name: name} -> name end)
-    |> Enum.join(", ")
-    Player.send_message(player, ["you see exits leading to the: ", :blue, exit_names])
+    |> Enum.map(fn %Way{name: name} -> 
+      name 
+      |> Alchemud.Humanize.underline 
+    end)
+    |> Alchemud.Humanize.enum
+    Player.send_message(player, [:green, :bright, "you see exits leading to the ", exit_names])
   end
 
   def exits(player = %Player{}) do

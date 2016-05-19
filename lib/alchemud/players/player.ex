@@ -9,9 +9,6 @@ defmodule Alchemud.Players.Player do
   """
   #@spec send_message(%Player{}, IO.Chardata.t, list) :: true | false
   def send_message(player = %__MODULE__{}, message, opts \\ []) do
-    IO.inspect player
-    IO.inspect message
-    IO.inspect opts
     Connection.send_message(player.connection, message, opts)
   end
 
