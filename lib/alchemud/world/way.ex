@@ -65,4 +65,22 @@ defmodule Alchemud.World.Way do
     Alchemud.World.LocationManager.whereis_location(entrance_uuid)
   end
 
+
+  def possible_directions do
+    directions1 = %{
+      "north" => "south", 
+      "northeast" => "southwest",
+      "east" => "west", 
+      "southeast" => "northwest",
+      "up" => "down", 
+      "in" => "out",
+    }
+    directions2 = for {k,v} <- directions1, do: {v,k}, into: %{}
+    Map.merge(directions1, directions2) 
+  end
+
+  def inverse_way_name(name) do
+    possible_directions[name]
+  end
+
 end

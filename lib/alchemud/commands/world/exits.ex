@@ -12,9 +12,13 @@ defmodule Alchemud.Commands.World.Exits do
 
   @common_exits_with_aliases %{
     "north" => "n", 
-    "south" => "s", 
+    "northeast" => "ne",
     "east" => "e", 
+    "southeast" => "se",
+    "south" => "s", 
+    "southwest" => "sw",
     "west" => "w", 
+    "northwest" => "nw",
     "up" => "u", 
     "down" => "d", 
     "in" => "in", 

@@ -90,9 +90,10 @@ defmodule Alchemud.World.Character do
 
   def move_across_exit(player = %Player{}, way = %Way{}) do
     Player.send_message(player, "You move #{way.name}. \r\n")
-    broadcast(player, "#{player.name} leaves, going #{way.name}. \r\n")
+    broadcast_from(player, "#{player.name} leaves, going #{way.name}. \r\n")
     Entity.move_to(player.character, way.exit)
-    broadcast(player, "#{player.name} arrives from the inverse of #{way.name}. \r\n")
+
+    broadcast_from(player, "#{player.name} arrives from the #{Way.inverse_way_name(way.name)}. \r\n")
     look_at_location(player)
   end
 
