@@ -26,17 +26,31 @@ Some inspiration is taken from the never-finished [Erlmud by zxq9](http://zxq9.c
 - Better support for Telnet stuff
 - Connection Abstraction layer 
 
-## Roadmap
+
+2016-05-18
 
 - Player logging in: Player processes, PlayerManager, PlayerSupervisor
-- Global commands (Chat, options)
 - Characters: Being started by a player, inhabiting the world.
+- Emotes/'say' commands.
+
+2016-05-19
+
+- Players seeing each others messages.
+- Entities seeing each others messages.
+- Simple time-based entity.
+- Movement!!!
 - Commands that are passed to the character (and then to the world)
+
+
+## Roadmap
+
+- Global commands (Chat, options)
 - Entities as state-machines
 - Entities can be containers
 - Entities can be moved between containers
 - Persistence of world -> hard disk.
 - Loading of persisted world.
+- Inform7-style worldbuilding syntax?
 - (How to implement difference between 'cyclic (resetting every so often)' world and 'persistent' (player data) world)?
 
 
