@@ -1,4 +1,9 @@
 defmodule Alchemud.Humanize do
+  @moduledoc """
+  Defines functions that change lists of things to a more humanly-readable format/markup.
+  """
+
+
 
   @doc """
   Enumerates a list of strings or iodata so the elements are separated by `, `, except for the last element, which is separated by ` and `

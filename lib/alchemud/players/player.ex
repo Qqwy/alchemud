@@ -1,4 +1,12 @@
 defmodule Alchemud.Players.Player do
+  @moduledoc """
+  A logged-in player. No extra process, `piggybacks` on the Connection process.
+
+  Handles contact with the Character, and dispatches command parsing.
+
+  A player is a non-world-specific identity.
+  """
+
   defstruct name: nil, password: nil, logged_in_at: nil, connection: nil, character: nil
   alias Alchemud.Players.Player
   alias Alchemud.World.Character

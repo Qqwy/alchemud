@@ -1,4 +1,12 @@
 defmodule Alchemud.World.Entity.Behaviour do
+  @moduledoc """
+  This is the behaviour that ought to be implemented by any entities.
+
+  These to-be implemented functions are callbacks that are called from the `Entity` GenServer, whenever applicable.
+
+  Default implementations for these callbacks have been provided, so you only need to override the ones that are special for that entity.
+  """
+
   alias Alchemud.World.Entity
 
   @callback after_init(Entity.t, []) :: Entity.t

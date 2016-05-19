@@ -1,9 +1,12 @@
 defmodule Alchemud.World.Location.Behaviour do
-  @moduledoc """
-  A single location in the game.
+    @moduledoc """
+  This is the behaviour that ought to be implemented by any locations.
 
-  Can be travelled to and from through any of the 'ways' between locations.
+  These to-be implemented functions are callbacks that are called from the `Location` GenServer, whenever applicable.
+
+  Default implementations for these callbacks have been provided, so you only need to override the ones that are special for that entity.
   """
+
   alias Alchemud.World.Location
 
   @type location_state_map :: %{location_module: atom}

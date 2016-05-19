@@ -1,4 +1,11 @@
 defmodule Alchemud.Commands.World.Emote do
+  @moduledoc """
+  Commands that have to do with expressing (emoting) things:
+
+  - Saying things (Maybe these will be moved to their own module at some time)
+  - mannerisms
+  """
+
   alias Alchemud.World.Character
   alias Alchemud.Players.Player
   alias Alchemud.World.Way

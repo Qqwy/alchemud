@@ -1,4 +1,10 @@
 defmodule Alchemud.World.Character do
+  @moduledoc """
+  A special kind of `Entity` that is driven by a Player.
+
+  The *embodiment* of the player, if you will.
+  """
+
   alias Alchemud.Players.Player
   alias Alchemud.World.Entity
   alias Alchemud.World.Location

@@ -1,4 +1,10 @@
 defmodule Alchemud.Connections.Telnet.Handler do
+  @moduledoc """
+  A new Connections.Telnet.Handler is started for each person that connects over Telnet.
+
+  Dispatches to the Connection to pass command, and does telnet-specific parsing of commands (ANSI-conversion, etc). 
+  """
+
   @tcp_timeout 360_000
 
   alias Alchemud.Connections.Connection

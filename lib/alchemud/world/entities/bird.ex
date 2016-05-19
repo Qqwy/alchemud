@@ -1,4 +1,7 @@
 defmodule Alchemud.World.Entity.Bird do
+  @moduledoc """
+  A simple test entity.
+  """
 
   use Alchemud.World.Entity.Behaviour
   use Timex

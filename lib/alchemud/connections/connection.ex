@@ -1,4 +1,13 @@
 defmodule Alchemud.Connections.Connection do
+  @moduledoc """
+  This GenServer is made whenever a specific connection (no mather what kind of connection that is) is established.
+
+  It both handles incoming commands from the specific connection, as well as dispatching messages from the world to that connection.
+
+  It also runs the Gatekeeper to link a connection to a player, before logging this player in (and adding its character to the world).
+  """
+
+
   alias Alchemud.Connections.ConnectionProtocol 
   alias Alchemud.Players.Player
 
@@ -38,6 +47,12 @@ defmodule Alchemud.Connections.Connection do
   """
 
   defmodule ConnectionState do
+    @moduledoc """
+    This struct contains the state  a connection can have:
+    connection_handler: The specific handler for this specific connection.
+    gatekeeper: A Gatekeeper FSM for the current login/register procedure.
+    player: Becomes the logged-in player when set to it by the Gatekeeper.
+    """
     defstruct gatekeeper: nil, player: nil, connection_handler: nil 
   end
 

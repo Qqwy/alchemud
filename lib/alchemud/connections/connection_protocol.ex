@@ -31,5 +31,8 @@ defprotocol Alchemud.Connections.ConnectionProtocol do
 end
 
 defmodule Alchemud.Connections.Connection.Telnet do
+  @moduledoc """
+  The Telnet-specific connection info. Contains the transport-callback and the Socket port.
+  """
   defstruct socket: nil, transport: nil, connection_pid: nil
 end

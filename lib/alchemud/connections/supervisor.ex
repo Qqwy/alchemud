@@ -1,4 +1,10 @@
 defmodule Alchemud.Connections.Supervisor do
+  @moduledoc """
+  Supervises all different kinds of Connection Listeners.
+
+  (Telnet, ???, ???, etc)
+  """
+
   use Supervisor
 
   def start_link do

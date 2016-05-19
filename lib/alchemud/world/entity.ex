@@ -1,4 +1,12 @@
 defmodule Alchemud.World.Entity do
+  @moduledoc """
+  An Entity (can both be a thing or a living being). It is a GenServer that does all the 'plumbing' all entities have. 
+
+  Make specific entities by passing in a module that uses the `Entity.Behaviour`.
+  
+  Entities are linked to the Location they are in, and thus an malbehaving entity will crash the location and vice versa.
+  """
+
   use ExActor.GenServer
 
 

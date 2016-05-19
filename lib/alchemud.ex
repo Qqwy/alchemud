@@ -1,4 +1,8 @@
 defmodule Alchemud do
+  @moduledoc """
+  A bare-bones Multi-User-Dungeon implementation in Elixir.
+  """
+
   use Application
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html

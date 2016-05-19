@@ -1,4 +1,11 @@
 defmodule Alchemud.World.LocationSupervisor do
+  @moduledoc """
+  Supervises locations.
+
+  TODO: Find out how to restart locations when they are down.
+  (with what parameters/state)
+  """
+
   use Supervisor
 
   def start_link do

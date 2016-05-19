@@ -1,4 +1,24 @@
 defmodule Alchemud.World.Way do
+  @moduledoc """
+  A Way is a connection between two locations. A way is one-way. (To move back, you need a second way pointing the other way)
+
+  A way has an entrance, and an exit.
+
+  When an entity moves, this happens:
+  Location you exit from -> (the entrance of the Way) Way (the exit of the way) -> Location you enter.
+  So, the 'entrance' of the way is an exit out of a Location.
+
+  A way is supervised by its 'exit' Location. 
+  This means that when a Location crashes, 
+  that this location becomes unreachable, 
+  as the ways into that Location are now gone as well.
+
+  When a way is made, it pings its 'entrance' every #{@exit_check_interval} milliseconds, to register itself under the `exits` that Location.
+
+  Whenever that monitored `enrance` location goes down, the way will start pinging again until it comes back up.
+  """
+
+
   @exit_check_interval 1000
 
   defstruct entrance: nil, exit: nil, name: nil, pid: nil

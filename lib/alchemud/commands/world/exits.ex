@@ -1,4 +1,10 @@
 defmodule Alchemud.Commands.World.Exits do
+  @moduledoc """
+  Checks if the player attempts to move in one of the available directions (AKA ways AKA exits from the current location).
+
+  If a known exit name is used that is not an exit of the current room, an error message is print.
+  """
+
   alias Alchemud.World.Character
   alias Alchemud.Players.Player
   alias Alchemud.World.Way

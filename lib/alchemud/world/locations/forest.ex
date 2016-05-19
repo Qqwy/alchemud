@@ -1,4 +1,8 @@
 defmodule Alchemud.World.Location.Forest do
+  @moduledoc """
+  A simple test location.
+  """
+
   use Alchemud.World.Location.Behaviour
 
   def handle_tick(location = %{name: name}) do 
