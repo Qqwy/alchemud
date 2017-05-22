@@ -15,7 +15,8 @@ defmodule Alchemud do
       # worker(Alchemud.Worker, [arg1, arg2, arg3]),
       supervisor(Alchemud.World.Supervisor,[]),
       supervisor(Alchemud.Connections.Supervisor,[]),
-      worker(Alchemud.World, [])
+      worker(Alchemud.World, []),
+      worker(Alchemud.Commands.NLTK.PythonWrapper, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

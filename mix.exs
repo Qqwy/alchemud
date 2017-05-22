@@ -48,8 +48,8 @@ defmodule Alchemud.Mixfile do
       {:timex, "~> 2.1"},
 
       {:apex, "~>0.5.0"},                           # Pretty-printing.
-      {:credo, "~> 0.3", only: [:dev, :test]}
-
+      {:credo, "~> 0.3", only: [:dev, :test]},
+      {:erlport, "~> 0.9.8"},
     ]
   end
 end
